@@ -1,0 +1,18 @@
+Movement is a Farcaster Frame for social activism, where users can (anonymously) create, share, and sign petitions. 
+
+Features:
+1. Create new petition
+1a. Upload image
+2. Sign ongoing petition
+3. Donate (ERC-20)
+4. Account abstraction
+5. Web2 sign-in
+
+
+Bounties:
+1. Dynamic: Most innovative use of frames ⸺ $1,000
+2. Dynamic: Best Integration ⸺ $1,000
+3. Base: Most Creative Frame ⸺ $1,000
+4. Base: Best AA Frame dev tool ⸺ $2,000
+5. Airstack: Best use of Airstack ⸺ $3,500
+6. Pinata: Best Use of Pinata's Frame Analytics in a Frame ⸺ $2,500
