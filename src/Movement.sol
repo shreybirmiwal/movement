@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract MovementStorage {
     struct Petition {
+        uint256 id;
         address creator;
         string name;
         string imageURI;
@@ -12,8 +13,7 @@ contract MovementStorage {
         address[] donors;
     }
 
-    mapping(uint256 => Petition) public petitions;
-    uint256 internal totalPetitions;
+    Petition[] public petitions;
 
     event petitioned(address creator, string indexed name, uint256 indexed id);
     event donated(address signee, uint256 indexed id);
@@ -21,24 +21,21 @@ contract MovementStorage {
 }
 
 contract Movement is MovementStorage, ERC20 {
-    constructor() ERC20("Movement", "MVMT") {}
+    address public immutable token;
 
-    address token;
+    constructor(address _token) ERC20("Movement", "MVMT") {
+        token = _token;
+    }
 
     function create(string memory _name, string memory _imageURI) public {
         address[] memory _donors;
-        petitions[totalPetitions] = Petition(
-            msg.sender,
-            _name,
-            _imageURI,
-            0,
-            _donors
+        petitions.push(
+            Petition(petitions.length, msg.sender, _name, _imageURI, 0, _donors)
         );
-        totalPetitions++;
-        emit petitioned(msg.sender, _name, totalPetitions);
+        emit petitioned(msg.sender, _name, petitions.length - 1);
     }
 
-    function donate(uint256 _id, uint256 _amount) public payable {
+    function donate(uint256 _id, uint256 _amount) public {
         ERC20(token).approve(address(this), _amount);
         ERC20(token).transferFrom(msg.sender, address(this), _amount);
         petitions[_id].donors.push(msg.sender);
@@ -64,8 +61,7 @@ contract Movement is MovementStorage, ERC20 {
         return petitions[_id].donors;
     }
 
-    function getFunds(uint256 _id) public view returns (uint256 _funds) {
-        return petitions[_id].funds;
+    function getPetitions() public view returns (Petition[] memory) {
+        return petitions;
     }
-
 }
