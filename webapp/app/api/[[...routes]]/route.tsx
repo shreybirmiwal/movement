@@ -1,5 +1,6 @@
 /** @jsxImportSource frog/jsx */
-
+import { parseEther } from 'frog'
+import { abi } from './abi'
 import { Button, Frog, TextInput } from 'frog'
 import { devtools } from 'frog/dev'
 // import { neynar } from 'frog/hubs'
@@ -9,6 +10,7 @@ import { serveStatic } from 'frog/serve-static'
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
+  origin: 'https://4cfd-92-204-97-110.ngrok-free.app'
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
@@ -17,54 +19,79 @@ const app = new Frog({
 // export const runtime = 'edge'
 
 app.frame('/', (c) => {
-  const { buttonValue, inputText, status } = c
-  const fruit = inputText || buttonValue
   return c.res({
-    image: (
-      <div
-        style={{
-          alignItems: 'center',
-          background:
-            status === 'response'
-              ? 'linear-gradient(to right, #432889, #17101F)'
-              : 'black',
-          backgroundSize: '100% 100%',
-          display: 'flex',
-          flexDirection: 'column',
-          flexWrap: 'nowrap',
-          height: '100%',
-          justifyContent: 'center',
-          textAlign: 'center',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            color: 'white',
-            fontSize: 60,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {status === 'response'
-            ? `Nice choice.${fruit ? ` ${fruit.toUpperCase()}!!` : ''}`
-            : 'Welcome!'}
-        </div>
-      </div>
-    ),
+    action:  '/1',
+    image: ('/test.png'),
     intents: [
-      <TextInput placeholder="Enter custom fruit..." />,
-      <Button value="apples">Apples</Button>,
-      <Button value="oranges">Oranges</Button>,
-      <Button value="bananas">Bananas</Button>,
-      status === 'response' && <Button.Reset>Reset</Button.Reset>,
+      <Button value="apples">go to id</Button>,
     ],
   })
 })
+
+
+app.frame('/1', (c) => {
+
+  return c.res({
+    action: '/finish',
+    image: (<div>
+
+    </div>),
+    intents: [
+      <TextInput placeholder="Donate ETH" />,
+      <Button.Transaction target="/Donate">Send Donation</Button.Transaction>,
+      <Button.Transaction target="/Petition">Sign Petition (ethSign)</Button.Transaction>,
+    ],
+  })
+  
+})
+
+app.transaction('/Donate', (c) => {
+  // Contract transaction response.
+
+  const { inputText } = c
+
+  return c.send({
+    chainId: 'eip155:10',
+    to: '',
+    value: parseEther(inputText),
+  })
+
+  // return c.contract({
+  //   abi,
+  //   chainId: 'eip155:84532',
+  //   functionName: '',
+  //   to: ''
+  // })
+  
+})
+
+app.transaction('/Petition', (c) => {
+  // Contract transaction response.
+  const { inputText } = c
+
+  return c.contract({
+    abi,
+    chainId: 'eip155:84532',
+    functionName: '',
+    args: [inputText],
+    to: ''
+  })
+})
+
+app.frame('/finish', (c) => {
+  const { transactionId } = c
+  return c.res({
+    image: (
+      <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>
+        Transaction ID: {transactionId}
+      </div>
+    ),
+    intents: [
+      <Button.Reset>Restart</Button.Reset>,
+    ],
+  })
+})
+
 
 devtools(app, { serveStatic })
 
