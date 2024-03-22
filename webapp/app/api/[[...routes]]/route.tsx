@@ -18,23 +18,17 @@ const app = new Frog({
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
-app.frame('/', (c) => {
-  return c.res({
-    action:  '/1',
-    image: ('/test.png'),
-    intents: [
-      <Button value="apples">go to id</Button>,
-    ],
-  })
-})
 
+app.frame('/page/:id', (c) => {
 
-app.frame('/1', (c) => {
+  const { id } = c.req.param()
 
+  console.log(id)
+  
   return c.res({
     action: '/finish',
     image: (<div>
-
+      {id}
     </div>),
     intents: [
       <TextInput placeholder="Donate ETH" />,
@@ -62,7 +56,7 @@ app.transaction('/Donate', (c) => {
   //   functionName: '',
   //   to: ''
   // })
-  
+
 })
 
 app.transaction('/Petition', (c) => {
