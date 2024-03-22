@@ -9,7 +9,6 @@ contract MovementStorage {
         string name;
         string imageURI;
         uint256 funds;
-        address[] signers;
         address[] donors;
     }
 
@@ -17,7 +16,6 @@ contract MovementStorage {
     uint256 internal totalPetitions;
 
     event petitioned(address creator, string indexed name, uint256 indexed id);
-    event signed(address signee, uint256 indexed id);
     event donated(address signee, uint256 indexed id);
     event withdrew(address creator, uint256 amount, uint256 indexed id);
 }
@@ -28,24 +26,16 @@ contract Movement is MovementStorage, ERC20 {
     address token;
 
     function create(string memory _name, string memory _imageURI) public {
-        address[] memory _signers;
         address[] memory _donors;
         petitions[totalPetitions] = Petition(
             msg.sender,
             _name,
             _imageURI,
             0,
-            _signers,
             _donors
         );
         totalPetitions++;
         emit petitioned(msg.sender, _name, totalPetitions);
-    }
-
-    function sign(uint256 _id) public {
-        // connect to signing document on EthSign to pull address
-        petitions[_id].signers.push(msg.sender);
-        emit signed(msg.sender, _id);
     }
 
     function donate(uint256 _id, uint256 _amount) public payable {
@@ -74,9 +64,8 @@ contract Movement is MovementStorage, ERC20 {
         return petitions[_id].donors;
     }
 
-    function getSigners(
-        uint256 _id
-    ) public view returns (address[] memory _signers) {
-        return petitions[_id].signers;
+    function getFunds(uint256 _id) public view returns (uint256 _funds) {
+        return petitions[_id].funds;
     }
+
 }
