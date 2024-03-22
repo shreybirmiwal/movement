@@ -3,8 +3,19 @@ import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import {
+  DynamicContextProvider,
+  DynamicWidget,
+} from "@dynamic-labs/sdk-react-core";
+import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
+import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+
+const queryClient = new QueryClient();
 
 function App() {
+
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#96b7ff');
@@ -31,6 +42,19 @@ function App() {
     console.log('Background Color:', backgroundColor);
     console.log('Donation Address:', donationAddress);
 
+    // if(!isConnected){
+    //   toast.error('Ensure wallet is connected!', {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "dark",
+    //   });
+    // }
+
     if (!(movementTitle && movementDescription && donationAddress)) {
       toast.error('Ensure fields not left blank!', {
         position: "top-right",
@@ -43,14 +67,30 @@ function App() {
         theme: "dark",
       });
     }
+
     
     };
 
   return (
+
+    <DynamicContextProvider
+    settings={{
+      // Find your environment id at https://app.dynamic.xyz/dashboard/developer
+      environmentId: '0ca24247-9679-4abc-8963-bb5f36ad358b',
+      walletConnectors: [EthereumWalletConnectors],
+    }}
+    >
+        <QueryClientProvider client={queryClient}>
+
+
+      <div className='p-10'>
+        <DynamicWidget />
+      </div>
+
     <div>
 
       {/*TIT:E */}
-      <div className="flex mt-14">
+      <div className="flex mt-10">
         <div className="flex w-1/2 justify-center items-center flex-col">
           <h1 className="text-3xl font-bold mb-4">Create a Movement </h1>
         </div>
@@ -158,6 +198,10 @@ function App() {
       />
 
     </div>
+
+    
+        </QueryClientProvider>
+    </DynamicContextProvider>
   );
 }
 
