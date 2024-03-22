@@ -10,7 +10,7 @@ import { serveStatic } from 'frog/serve-static'
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  origin: 'https://4cfd-92-204-97-110.ngrok-free.app'
+  origin: 'https://e75b-70-123-51-67.ngrok-free.app'
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
@@ -24,12 +24,20 @@ app.frame('/page/:id', (c) => {
   const { id } = c.req.param()
 
   console.log(id)
-  
+  const movementTitle = null;
+  const movementDescription = null
+  var signers = 0;
+
   return c.res({
     action: '/finish',
-    image: (<div>
-      {id}
-    </div>),
+    image: (
+      <div style={{ textAlign: 'center', padding: '0.75rem' }}>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', marginTop: '2.5rem' }}>{movementTitle || '[Title goes here]'}</h1>
+        <h1 style={{ fontSize: '1.5rem', marginTop: '1rem' }}>{movementDescription || '[Description goes here]'}</h1>
+        <h1 style={{ marginTop: '1.25rem' }}>{signers} people have joined this movement</h1>
+        {id}
+      </div>
+    ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target="/Donate">Send Donation</Button.Transaction>,
@@ -44,18 +52,12 @@ app.transaction('/Donate', (c) => {
 
   const { inputText } = c
 
-  return c.send({
-    chainId: 'eip155:10',
-    to: '',
-    value: parseEther(inputText),
-  })
-
-  // return c.contract({
-  //   abi,
-  //   chainId: 'eip155:84532',
-  //   functionName: '',
-  //   to: ''
-  // })
+   return c.contract({
+     abi,
+     chainId: 'eip155:84532',
+     functionName: '',
+     to: ''
+   })
 
 })
 
