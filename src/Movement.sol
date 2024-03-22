@@ -39,17 +39,21 @@ contract Movement is MovementStorage, ERC20 {
             _donors
         );
         totalPetitions++;
+        emit petitioned(msg.sender, _name, totalPetitions);
     }
 
     function sign(uint256 _id) public {
-        // logic for signing document and interacting with smart contract
+        // connect to signing document on EthSign to pull address
         petitions[_id].signers.push(msg.sender);
+        emit signed(msg.sender, _id);
     }
 
     function donate(uint256 _id, uint256 _amount) public payable {
         ERC20(token).approve(address(this), _amount);
         ERC20(token).transferFrom(msg.sender, address(this), _amount);
         petitions[_id].donors.push(msg.sender);
+        petitions[_id].funds += _amount;
+        emit donated(msg.sender, _id);
     }
 
     function withdraw(uint256 _id) public {
@@ -61,9 +65,18 @@ contract Movement is MovementStorage, ERC20 {
 
         petitions[_id].funds = 0;
         ERC20(token).transfer(msg.sender, petitions[_id].funds);
+        emit withdrew(msg.sender, petitions[_id].funds, _id);
     }
 
-    function getDonors() public view returns (address[] memory _donors) {}
+    function getDonors(
+        uint256 _id
+    ) public view returns (address[] memory _donors) {
+        return petitions[_id].donors;
+    }
 
-    function getSigners() public view returns (address[] memory _signers) {}
+    function getSigners(
+        uint256 _id
+    ) public view returns (address[] memory _signers) {
+        return petitions[_id].signers;
+    }
 }
