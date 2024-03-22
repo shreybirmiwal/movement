@@ -106,17 +106,38 @@ function App() {
 
         <div className="flex w-1/2 justify-center items-center flex-col">
             
-          <div style={{backgroundColor: backgroundColor}} className={` w-[600px] h-[315px] rounded-md`}>
-
-            <div className='text-center p-3'>
-              <h1 className="text-3xl font-bold mt-10">{movementTitle || '[Title goes here]'}</h1>
-              <h1 className="text-2xl mt-4">{movementDescription || '[Description goes here]'}</h1>
-              <h1 className='mt-5'> 0 people have joined this movement </h1>
-
+          {/* the actual card that is displayed */}
+          <div>
+            <div style={{backgroundColor: backgroundColor}} className={` w-[600px] h-[315px] rounded-md`}>
+              <div className='text-center p-3'>
+                <h1 className="text-3xl font-bold mt-10">{movementTitle || '[Title goes here]'}</h1>
+                <h1 className="text-2xl mt-4">{movementDescription || '[Description goes here]'}</h1>
+                <h1 className='mt-5'> 0 people have joined this movement </h1>
+              </div>
             </div>
 
+            <div className='bg-gray-100 h-[122px]'>
 
-  
+              <div className='py-5 border'>
+                <div className='ml-5 text-gray-500'>
+                  Donate ETH
+                </div>
+              </div>
+
+                <div className="grid grid-cols-3 text-center">
+                    <div className='grid-span-1 border py-4'>
+                      Send Donation
+                    </div>
+                    <div className='grid-span-1 border py-4'>
+                      EthSign Petition
+                    </div>
+                    <div className='grid-span-1 border py-4'>
+                      Create your Movement ->
+                    </div>
+                  </div>
+              </div>
+
+
           </div>
 
         </div>
