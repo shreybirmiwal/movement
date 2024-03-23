@@ -29,9 +29,9 @@ function formatNumber(number: number): string {
   return number.toLocaleString();
 }
 
-async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: string }> {
+async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: string, downloadPDF: string }> {
 
-  const [totalDonors, URL] = await Promise.all([
+  const [totalDonors, URL, pdfURL] = await Promise.all([
     publicClient.readContract({
       address: contractAdress,
       abi: abi,
@@ -44,14 +44,26 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
       functionName: 'getImageURI',
       args : [id]
     }),
+    publicClient.readContract({
+      address: contractAdress,
+      abi: abi,
+      functionName: 'getPDFURI',
+      args : [id]
+    }),
   ]);
 
     const url2: string = URL as string;
+    const pdfURL2: string = pdfURL as string;
 
+    //this is for the image
     const storageRef = ref(storage, url2);
     const downloadURL = await getDownloadURL(storageRef);
 
-    return { totalDonors, downloadURL }
+    //this is for the pdf
+    const storageRef1 = ref(storage, pdfURL2);
+    const downloadPDF = await getDownloadURL(storageRef1);
+
+    return { totalDonors, downloadURL, downloadPDF }
 }
 
 
@@ -74,12 +86,14 @@ app.frame('/page/:id', async (c) => {
 
   var downloadURL = 'https://via.placeholder.com/150'
   var totalDonors = 0
+  var pdfURL = 'https://via.placeholder.com/150'
   
   if(id != null && id != undefined && id != '' && id != ':id'){
     console.log("GETTING SM CONTRACT DATA !")
     const data = await getData(Number(id));
     totalDonors = data.totalDonors;
     downloadURL = data.downloadURL;
+    pdfURL = data.downloadPDF;
   }
   else {
 
@@ -122,8 +136,9 @@ app.frame('/page/:id', async (c) => {
     ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
-      <Button.Transaction target={"/Donate/"+id}>Send Donation</Button.Transaction>,
-      <Button.Link href="https://www.ethsign.xyz/">ethSign Petition</Button.Link>,
+      <Button.Transaction target={"/Donate/"+id}>Donate</Button.Transaction>,
+      <Button.Link href="https://www.ethsign.xyz/">Sign</Button.Link>,
+      <Button.Link href={pdfURL}>View</Button.Link>,
       <Button.Link href="http://localhost:3001/">Start your Movement</Button.Link>,
     ],
   })
