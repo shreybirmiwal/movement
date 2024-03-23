@@ -9,6 +9,8 @@ import { serveStatic } from 'frog/serve-static'
 import {storage} from '../../firebase'
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
+import { publicClient } from './client'
+
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
@@ -23,6 +25,31 @@ function formatNumber(number: number): string {
   return number.toLocaleString();
 }
 
+async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: string }> {
+
+  const [totalDonors, URL] = await Promise.all([
+    publicClient.readContract({
+      address: 'ENTER',
+      abi: abi,
+      functionName: 'getTotalDonors',
+      args : [id]
+    }),
+    publicClient.readContract({
+      address: 'ENTER',
+      abi: abi,
+      functionName: 'getURI',
+      args : [id]
+    }),
+  ]);
+
+    const storageRef = ref(storage, URL);
+    const downloadURL = await getDownloadURL(storageRef);
+
+    return { totalDonors, downloadURL }
+}
+
+
+
 
 app.frame('/page/:id', async (c) => {
 
@@ -30,13 +57,15 @@ app.frame('/page/:id', async (c) => {
   console.log(id)
 
   var downloadURL = 'https://via.placeholder.com/150'
+  var totalDonors = 0
   
   if(id != null && id != undefined && id != '' && id != ':id'){
-    const storageRef = ref(storage, id.toString());
-    downloadURL = await getDownloadURL(storageRef);
+    const data = await getData(Number(id));
+    totalDonors = data.totalDonors;
+    downloadURL = data.downloadURL;
   }
 
-  var signers = formatNumber(1000);
+  var signers = formatNumber(totalDonors);
 
 
   return c.res({
@@ -64,39 +93,29 @@ app.frame('/page/:id', async (c) => {
     ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
-      <Button.Transaction target="/Donate">Send Donation</Button.Transaction>,
-      <Button.Transaction target="/Petition">Sign Petition (ethSign)</Button.Transaction>,
+      <Button.Transaction target={"/Donate/"+id}>Send Donation</Button.Transaction>,
+      <Button.Link href="https://www.ethsign.xyz/">ethSign Petition</Button.Link>,
+      <Button.Link href="http://localhost:3001/">Start your Movement</Button.Link>,
     ],
   })
   
 })
 
-app.transaction('/Donate', (c) => {
+app.transaction('/Donate/:id', (c) => {
   // Contract transaction response.
-
+  const { id } = c.req.param()
   const { inputText } = c
 
    return c.contract({
      abi,
      chainId: 'eip155:84532',
-     functionName: '',
-     to: ''
+     functionName: 'donate',
+     to: 'ADDRESS',
+     args: [id, inputText]
    })
 
 })
 
-app.transaction('/Petition', (c) => {
-  // Contract transaction response.
-  const { inputText } = c
-
-  return c.contract({
-    abi,
-    chainId: 'eip155:84532',
-    functionName: '',
-    args: [inputText],
-    to: ''
-  })
-})
 
 app.frame('/finish', (c) => {
   const { transactionId } = c
