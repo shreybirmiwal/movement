@@ -30,6 +30,16 @@ contract MovementTest is Test {
         assert(petitions[0].donors.length == 0);
     }
 
+    function testSign() public {
+        testCreate();
+        vm.startPrank(sree);
+        movement.sign(0);
+        vm.stopPrank();
+        Movement.Petition[] memory petitions = movement.getPetitions();
+        assert(petitions[0].signers.length == 1);
+        assert(petitions[0].signers[0] == sree);
+    }
+
     function testDonate() public {
         testCreate();
         vm.startPrank(sree);
