@@ -33,7 +33,7 @@ function App() {
   const [movementDescription, setMovementDescription] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#96b7ff');
   const [donationAddress, setDonationAddress] = useState('');
-  const [selectedPDF, setSelectedPDF] = useState([]);
+  const [selectedPDF, setSelectedPDF] = useState(null);
 
   const handleTitleChange = (e) => {
     setMovementTitle(e.target.value);
@@ -105,7 +105,7 @@ function App() {
       });
     }
 
-    if (!(movementTitle && movementDescription && donationAddress && selectedPDF.length != 0)) {
+    if (!(movementTitle && movementDescription && selectedPDF)) {
       toast.error('Ensure fields not left blank!', {
         position: "top-right",
         autoClose: 5000,
@@ -119,7 +119,7 @@ function App() {
       return;
     }
 
-    var returnID;
+    console.log('About to convert to image...')
 
     handleConvertToImage().then(function({downloadURL, pdfUrl}){
 
