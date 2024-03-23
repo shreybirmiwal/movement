@@ -49,6 +49,7 @@ contract MovementTest is Test {
         vm.stopPrank();
         Movement.Petition[] memory petitions = movement.getPetitions();
         assert(petitions[0].funds == 100);
+        assert(petitions[0].donors.length == 1);
     }
 
     function testWithdraw() public {
