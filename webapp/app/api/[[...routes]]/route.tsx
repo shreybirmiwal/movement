@@ -6,11 +6,12 @@ import { devtools } from 'frog/dev'
 // import { neynar } from 'frog/hubs'
 import { handle } from 'frog/next'
 import { serveStatic } from 'frog/serve-static'
+import {storage} from '../../firebase'
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  origin: 'https://e75b-70-123-51-67.ngrok-free.app'
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
@@ -19,25 +20,23 @@ const app = new Frog({
 // export const runtime = 'edge'
 
 
-app.frame('/page/:id', (c) => {
+app.frame('/page/:id', async (c) => {
 
   const { id } = c.req.param()
-
   console.log(id)
-  const movementTitle = null;
-  const movementDescription = null
+
+  var downloadURL = 'https://via.placeholder.com/150'
+  
+  if(id != null && id != undefined && id != '' && id != ':id'){
+    const storageRef = ref(storage, id.toString());
+    downloadURL = await getDownloadURL(storageRef);
+  }
+
   var signers = 0;
 
   return c.res({
     action: '/finish',
-    image: (
-      <div style={{ textAlign: 'center', padding: '0.75rem' }}>
-        <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', marginTop: '2.5rem' }}>{movementTitle || '[Title goes here]'}</h1>
-        <h1 style={{ fontSize: '1.5rem', marginTop: '1rem' }}>{movementDescription || '[Description goes here]'}</h1>
-        <h1 style={{ marginTop: '1.25rem' }}>{signers} people have joined this movement</h1>
-        {id}
-      </div>
-    ),
+    image: <img src={downloadURL} alt="Downloaded Image" />,
     intents: [
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target="/Donate">Send Donation</Button.Transaction>,
