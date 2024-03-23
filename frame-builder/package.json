@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@dynamic-labs/ethereum": "^1.4.1",
+    "@dynamic-labs/ethereum-aa": "^1.4.1",
+    "@dynamic-labs/sdk-react-core": "^1.4.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -16,7 +19,14 @@
     "react-scripts": "^5.0.1",
     "react-toastify": "^10.0.5",
     "toastify": "^2.0.1",
+    "typescript": "^5.0.2",
+    "viem": "^1.21.4",
     "web-vitals": "^2.1.4"
+  },
+  "overrides": {
+    "react-scripts": {
+      "typescript": "^5"
+    }
   },
   "scripts": {
     "start": "react-scripts start",
