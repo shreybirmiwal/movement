@@ -126,7 +126,7 @@ app.frame('/page/:id', async (c) => {
           flexDirection: 'column',
           justifyContent: 'flex-end',
           alignItems: 'center',
-          paddingBottom: '110px',
+          paddingBottom: '90px',
         }}
       >
         <div style={{ fontSize: 100, color:'black', display:'flex' }}>
