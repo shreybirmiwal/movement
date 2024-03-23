@@ -10,11 +10,10 @@ Features:
 
 
 Bounties:
-1. Dynamic: Most innovative use of frames ⸺ $1,000
-2. Dynamic: Best Integration ⸺ $1,000
-3. Base: Most Creative Frame ⸺ $1,000
+[] 1. Dynamic: Most innovative use of Frames ⸺ $1,000
+[] 2. Dynamic: Best Integration ⸺ $1,000
+[X] 3. Base: Most Creative Frame ⸺ $1,000
 4. Base: Best AA Frame dev tool ⸺ $2,000
-5. Airstack: Best use of Airstack ⸺ $3,500
 
-TBD:
-1. Pinata: Best Use of Pinata's Frame Analytics in a Frame ⸺ $2,500
+TBD
+1. Airstack: Best use of Airstack ⸺ $2,000
