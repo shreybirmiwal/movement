@@ -4,21 +4,32 @@ import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { abi } from './abi';
+import { useAccount, useNetwork } from 'wagmi';
+
+import {toBlob} from 'html-to-image';
+import { saveAs } from 'file-saver';
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
+import { YourApp } from './YourApp';
+
+import { useContractWrite } from 'wagmi' 
 
 import {
   DynamicContextProvider,
   DynamicWidget,
 } from "@dynamic-labs/sdk-react-core";
-import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
-import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
-import {ZeroDevSmartWalletConnectors} from "@dynamic-labs/ethereum-aa"
-import {toBlob} from 'html-to-image';
-import { saveAs } from 'file-saver';
-import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 
 function App() {
 
+  const { address, isConnected } = useAccount();
+
+  const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
+
+  const { data, isLoading, isSuccess, write } = useContractWrite({
+    address: contractAdress,
+    abi: abi,
+    functionName: 'create',
+  })
 
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
@@ -41,22 +52,24 @@ function App() {
     const divToConvert = document.getElementById('divToConvert');
     if (!divToConvert) return;
 
-    let id;
+    let downloadURL;
 
     try {
       const blob = await toBlob(divToConvert, { pixelRatio: 2 });
       const storageRef = ref(storage);
       const listResult = await listAll(storageRef);
-      id = listResult.items.length + 1;
+      const id = listResult.items.length + 1;
       const fileRef = ref(storage, id.toString());
       await uploadBytes(fileRef, blob);
       console.log('Uploaded a blob to Firebase Storage');
+      downloadURL = await getDownloadURL(fileRef);
+      console.log('Download URL:', downloadURL);
     } catch (error) {
       console.error('Error uploading blob to Firebase Storage:', error);
       return null;
     }
 
-    return id;
+    return downloadURL;
   };
 
   const handleSubmit = () => {
@@ -68,18 +81,18 @@ function App() {
     console.log('Background Color:', backgroundColor);
     console.log('Donation Address:', donationAddress);
 
-    // if(!isConnected){
-    //   toast.error('Ensure wallet is connected!', {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "dark",
-    //   });
-    // }
+    if(!isConnected){
+      toast.error('Ensure wallet is connected!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
 
     if (!(movementTitle && movementDescription && donationAddress)) {
       toast.error('Ensure fields not left blank!', {
@@ -114,30 +127,37 @@ function App() {
       }
       else {
         returnID = result;
+        console.log(" ABOUT TO WRITE TO CONTRACT .. ")
+
+        write({
+          args: [movementTitle, returnID],
+          onError(error) {
+            console.log('Error', error)
+          },
+          onSuccess(data) {
+            console.log('Success', data)
+          },
+        })
+
+        if(isSuccess){
+          console.log("SUCCESS")
+          console.log(JSON.stringify(data))
+        }
+        console.log("ADDED SMART CONTRACT ")
+
       }
+
 
       console.log(result + "result") 
       return result;
 
     });
-
-
-
     
   };
 
   return (
 
-    <DynamicContextProvider
-    settings={{
-      // Find your environment id at https://app.dynamic.xyz/dashboard/developer
-      environmentId: '0ca24247-9679-4abc-8963-bb5f36ad358b',
-      walletConnectors: [EthereumWalletConnectors, ZeroDevSmartWalletConnectors],
-    }}
-    >
-      <DynamicWagmiConnector>
-
-
+    <div>
       <div className='p-10'>
         <DynamicWidget />
       </div>
@@ -206,7 +226,6 @@ function App() {
 
 
 
-
         <div className="flex w-1/2 justify-center items-center flex-col">
             
           <div>
@@ -259,9 +278,8 @@ function App() {
       />
 
     </div>
-    
-    </DynamicWagmiConnector>
-    </DynamicContextProvider>
+    </div>
+
   );
 }
 
