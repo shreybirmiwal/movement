@@ -19,6 +19,10 @@ const app = new Frog({
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
+function formatNumber(number: number): string {
+  return number.toLocaleString();
+}
+
 
 app.frame('/page/:id', async (c) => {
 
@@ -32,11 +36,32 @@ app.frame('/page/:id', async (c) => {
     downloadURL = await getDownloadURL(storageRef);
   }
 
-  var signers = 0;
+  var signers = formatNumber(1000);
+
 
   return c.res({
     action: '/finish',
-    image: <img src={downloadURL} alt="Downloaded Image" />,
+    image: (
+      <div
+        style={{
+          backgroundImage: `url(${downloadURL})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat', // Prevent background image from repeating
+          width: '1200px',
+          height: '630px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          paddingBottom: '110px',
+        }}
+      >
+        <div style={{ fontSize: 100, color:'black', display:'flex' }}>
+          {signers.toString()}
+        </div>
+      </div>
+    ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target="/Donate">Send Donation</Button.Transaction>,

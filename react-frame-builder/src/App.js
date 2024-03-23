@@ -33,27 +33,26 @@ function App() {
     setDonationAddress(e.target.value);
   };
 
-  const handleConvertToImage = () => {
+  const handleConvertToImage = async () => {
     const divToConvert = document.getElementById('divToConvert');
     if (!divToConvert) return;
 
-    var id;
-  
-    toBlob(divToConvert)
-      .then(async function (blob) {
+    let id;
 
-        id = (await listAll(ref(storage))).items.length + 1;
-        const fileRef = ref(storage, id.toString());
-        await uploadBytes(fileRef, blob);
-      })
-      .then(function (snapshot) {
-        console.log('Uploaded a blob to Firebase Storage:', snapshot);
-        return id;
-      })
-      .catch(function (error) {
-        console.error('Error uploading blob to Firebase Storage:', error);
-        return null;
-      });
+    try {
+      const blob = await toBlob(divToConvert, { pixelRatio: 2 });
+      const storageRef = ref(storage);
+      const listResult = await listAll(storageRef);
+      id = listResult.items.length + 1;
+      const fileRef = ref(storage, id.toString());
+      await uploadBytes(fileRef, blob);
+      console.log('Uploaded a blob to Firebase Storage');
+    } catch (error) {
+      console.error('Error uploading blob to Firebase Storage:', error);
+      return null;
+    }
+
+    return id;
   };
 
   const handleSubmit = () => {
@@ -89,25 +88,39 @@ function App() {
         progress: undefined,
         theme: "dark",
       });
+      return;
     }
 
-    const returnedId = handleConvertToImage();
-    if(returnedId == null){
-      toast.error('Error uploading Movement!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-    
+    var returnID;
+
+    handleConvertToImage().then(function(result){
+
+      if(result == null){
+        toast.error('Error uploading Movement!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return;
+      }
+      else {
+        returnID = result;
+      }
+
+      console.log(result + "result") 
+      return result;
+
+    });
+
+
 
     
-    };
+  };
 
   return (
 
@@ -177,12 +190,12 @@ function App() {
               Submit
             </button>
             
-            {/* <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
               onClick={handleConvertToImage}
             >
-              Convert to Image
-            </button> */}
+              test button
+            </button>
 
           </div>
         </div>
