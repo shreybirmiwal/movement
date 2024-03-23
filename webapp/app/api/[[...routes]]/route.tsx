@@ -14,6 +14,7 @@ import { publicClient } from './client'
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
+  origin: 'https://6642-70-123-51-67.ngrok-free.app',
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
@@ -49,8 +50,6 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
 }
 
 
-
-
 app.frame('/page/:id', async (c) => {
 
   const { id } = c.req.param()
@@ -60,12 +59,15 @@ app.frame('/page/:id', async (c) => {
   var totalDonors = 0
   
   if(id != null && id != undefined && id != '' && id != ':id'){
+    console.log("GETTING SM CONTRACT DATA !")
     const data = await getData(Number(id));
     totalDonors = data.totalDonors;
     downloadURL = data.downloadURL;
   }
 
   var signers = formatNumber(totalDonors);
+
+  console.log(signers + " " + downloadURL)
 
 
   return c.res({
@@ -104,14 +106,16 @@ app.frame('/page/:id', async (c) => {
 app.transaction('/Donate/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
+  console.log(" in donate page, got ID " + id)
   const { inputText } = c
+  console.log(" in donate page, got inputText " + inputText)
 
    return c.contract({
      abi,
      chainId: 'eip155:84532',
      functionName: 'donate',
      to: '0xD594F07Dfa9CbBeD78a36F314Cff124ea252A71d',
-     args: [id, inputText]
+     args: [id, BigInt(inputText)] // Convert inputText to BigInt
    })
 
 })
