@@ -10,14 +10,17 @@ import {storage} from '../../firebase'
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 import { publicClient } from './client'
+import { formatEther } from 'viem'
 
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  origin: 'https://6642-70-123-51-67.ngrok-free.app',
+  origin: 'https://52c7-70-123-51-67.ngrok-free.app',
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
+
+const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
 
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
@@ -30,13 +33,13 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
 
   const [totalDonors, URL] = await Promise.all([
     publicClient.readContract({
-      address: '0xD594F07Dfa9CbBeD78a36F314Cff124ea252A71d',
+      address: contractAdress,
       abi: abi,
       functionName: 'getTotalDonors',
       args : [id]
     }),
     publicClient.readContract({
-      address: '0xD594F07Dfa9CbBeD78a36F314Cff124ea252A71d',
+      address: contractAdress,
       abi: abi,
       functionName: 'getURI',
       args : [id]
@@ -53,7 +56,7 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
 app.frame('/page/:id', async (c) => {
 
   const { id } = c.req.param()
-  console.log(id)
+  console.log("the id is " + id)
 
   var downloadURL = 'https://via.placeholder.com/150'
   var totalDonors = 0
@@ -119,13 +122,14 @@ app.transaction('/Donate/:id', (c) => {
   console.log(" in donate page, got ID " + id)
   const { inputText } = c
   console.log(" in donate page, got inputText " + inputText)
+  const wei = BigInt(inputText || 0);
 
    return c.contract({
      abi,
      chainId: 'eip155:84532',
      functionName: 'donate',
-     to: '0xD594F07Dfa9CbBeD78a36F314Cff124ea252A71d',
-     args: [id, BigInt(inputText)] // Convert inputText to BigInt
+     to: contractAdress,
+     args: [id, BigInt(wei)] // Convert inputText to BigInt
    })
 
 })
