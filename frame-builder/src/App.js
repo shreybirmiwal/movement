@@ -10,6 +10,7 @@ import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
+import {useContractEvent} from 'wagmi'
 import { useContractWrite } from 'wagmi' 
 
 import {
@@ -46,6 +47,19 @@ function App() {
   const handleDonationAddressChange = (e) => {
     setDonationAddress(e.target.value);
   };
+
+  //    event petitioned(address creator, string indexed name, uint256 indexed id);
+
+  useContractEvent({
+    address: contractAdress,
+    abi: abi,
+    eventName: 'petitioned', 
+    listener(log) {
+      console.log("HI GUYS WE JUST GOT A USE CONTRACT EVENT EMISSION!", JSON.stringify(log));
+      const { args: { id } } = log[0];
+      console.log("ID:", id);
+    },
+  })
 
   const handleConvertToImage = async () => {
     const divToConvert = document.getElementById('divToConvert');
