@@ -283,6 +283,44 @@ export const abi =[
   },
   {
     "type": "function",
+    "name": "getImageURI",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_id",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "string",
+        "name": "",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getPDFURI",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_id",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "string",
+        "name": "",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getPetitions",
     "inputs": [],
     "outputs": [
@@ -370,25 +408,6 @@ export const abi =[
         "type": "address[]",
         "name": "",
         "internalType": "address[]"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getURI",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "_id",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "type": "string",
-        "name": "",
-        "internalType": "string"
       }
     ],
     "stateMutability": "view"

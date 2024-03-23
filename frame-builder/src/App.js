@@ -4,13 +4,15 @@ import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAccount, useNetwork } from 'wagmi';
-
 import {abi} from './abi.js'
 import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
+import {useContractEvent} from 'wagmi'
 import { useContractWrite } from 'wagmi' 
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 import {
   DynamicContextProvider,
@@ -21,14 +23,13 @@ function App() {
 
   const { address, isConnected } = useAccount();
 
-  const contractAdress = '0xa605Aa4D028f498faa89fb692c4EbDAc39217649'
+  const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
     address: contractAdress,
     abi: abi,
     functionName: 'create',
   })
-
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#96b7ff');
@@ -46,6 +47,51 @@ function App() {
   const handleDonationAddressChange = (e) => {
     setDonationAddress(e.target.value);
   };
+
+  //    event petitioned(address creator, string indexed name, uint256 indexed id);
+
+
+  useContractEvent({
+    address: contractAdress,
+    abi: abi,
+    eventName: 'petitioned', 
+    listener(log) {
+      console.log("HI GUYS WE JUST GOT A USE CONTRACT EVENT EMISSION!", JSON.stringify(log));
+      const { args: { id } } = log[0];
+
+      const { args: { creator } } = log[0];
+
+      console.log("Creator:", creator);
+      console.log("Address:", address)
+
+      //if(creator == address){
+        console.log("ID:", id);
+        confirmAlert({
+          title: 'Your Movement has been created!',
+          message: ('http://localhost:3000/'+ id.toString()),
+          buttons: [
+            {
+              label: 'Yes',
+              onClick: () => alert('Comfirm you have saved the URL')
+            },
+          ],
+          closeOnEscape: true,
+          closeOnClickOutside: true,
+          keyCodeForClose: [8, 32],
+          willUnmount: () => {},
+          afterClose: () => {},
+          onClickOutside: () => {},
+          onKeypress: () => {},
+          onKeypressEscape: () => {},
+          overlayClassName: "overlay-custom-class-name"
+        })
+  //    }
+   //   else {
+  //      console.log("Emisson that isnt mine ")
+  //    }
+
+    },
+  })
 
   const handleConvertToImage = async () => {
     const divToConvert = document.getElementById('divToConvert');
@@ -66,7 +112,7 @@ function App() {
       console.log('Download URL:', downloadURL);
 
       //also uploda the pdf
-      const fileRef2 = ref(storage, (id+1).toString()); 
+      const fileRef2 = ref(storage, (id+1).toString()+'.pdf'); 
       await uploadBytes(fileRef2, selectedPDF[0]);
       pdfUrl = await getDownloadURL(fileRef2);
 
