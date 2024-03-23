@@ -46,7 +46,9 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
     }),
   ]);
 
-    const storageRef = ref(storage, URL);
+    const url2: string = URL as string;
+
+    const storageRef = ref(storage, url2);
     const downloadURL = await getDownloadURL(storageRef);
 
     return { totalDonors, downloadURL }
