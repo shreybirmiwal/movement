@@ -12,6 +12,7 @@ contract MovementStorage {
         string imageURI;
         uint256 funds;
         address[] donors;
+        address[] signers;
     }
 
     Petition[] public petitions;
@@ -34,6 +35,7 @@ contract Movement is MovementStorage, ERC20 {
         string memory _imageURI
     ) public {
         address[] memory _donors;
+        address[] memory _signers;
         petitions.push(
             Petition(
                 petitions.length,
@@ -42,16 +44,37 @@ contract Movement is MovementStorage, ERC20 {
                 pdfURI,
                 _imageURI,
                 0,
-                _donors
+                _donors,
+                _signers
             )
         );
         emit petitioned(msg.sender, _name, petitions.length - 1);
     }
 
+    function sign(uint256 _id) public {
+        for (uint256 i = 0; i < petitions[_id].signers.length; i++) {
+            if (petitions[_id].signers[i] == msg.sender) {
+                revert("Movement: Already signed this petition");
+            }
+        }
+        petitions[_id].signers.push(msg.sender);
+    }
+
     function donate(uint256 _id, uint256 _amount) public {
         ERC20(token).approve(address(this), _amount);
         ERC20(token).transferFrom(msg.sender, address(this), _amount);
-        petitions[_id].donors.push(msg.sender);
+        bool isDonor = false;
+        for (uint256 i = 0; i < petitions[_id].donors.length; i++) {
+            if (petitions[_id].donors[i] == msg.sender) {
+                isDonor = true;
+                break;
+            }
+        }
+
+        if (!isDonor) {
+            petitions[_id].donors.push(msg.sender);
+        }
+
         petitions[_id].funds += _amount;
         emit donated(msg.sender, _id);
     }
@@ -70,6 +93,12 @@ contract Movement is MovementStorage, ERC20 {
 
     function getTotalDonors(uint256 _id) public view returns (uint256) {
         return petitions[_id].donors.length;
+    }
+
+    function getTotalSigners(
+        uint256 _id
+    ) public view returns (address[] memory) {
+        return petitions[_id].signers;
     }
 
     function getPetitions() public view returns (Petition[] memory) {

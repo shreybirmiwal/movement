@@ -37,6 +37,8 @@ contract MovementTest is Test {
         erc20.approve(address(movement), 100);
         movement.donate(0, 100);
         vm.stopPrank();
+        Movement.Petition[] memory petitions = movement.getPetitions();
+        assert(petitions[0].funds == 100);
     }
 
     function testWithdraw() public {
