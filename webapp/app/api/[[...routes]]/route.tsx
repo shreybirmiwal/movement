@@ -29,13 +29,13 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
 
   const [totalDonors, URL] = await Promise.all([
     publicClient.readContract({
-      address: 'ENTER',
+      address: '0xD594F07Dfa9CbBeD78a36F314Cff124ea252A71d',
       abi: abi,
       functionName: 'getTotalDonors',
       args : [id]
     }),
     publicClient.readContract({
-      address: 'ENTER',
+      address: '0xD594F07Dfa9CbBeD78a36F314Cff124ea252A71d',
       abi: abi,
       functionName: 'getURI',
       args : [id]
@@ -110,11 +110,12 @@ app.transaction('/Donate/:id', (c) => {
      abi,
      chainId: 'eip155:84532',
      functionName: 'donate',
-     to: 'ADDRESS',
+     to: '0xD594F07Dfa9CbBeD78a36F314Cff124ea252A71d',
      args: [id, inputText]
    })
 
 })
+
 
 
 app.frame('/finish', (c) => {
