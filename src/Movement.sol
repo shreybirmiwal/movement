@@ -64,4 +64,8 @@ contract Movement is MovementStorage, ERC20 {
     function getPetitions() public view returns (Petition[] memory) {
         return petitions;
     }
+
+    function getURI(uint _id) public view returns (string memory) {
+        return petitions[_id].imageURI;
+    }
 }
