@@ -214,6 +214,11 @@ export const abi = [
       },
       {
         "type": "string",
+        "name": "pdfURI",
+        "internalType": "string"
+      },
+      {
+        "type": "string",
         "name": "_imageURI",
         "internalType": "string"
       }
@@ -302,6 +307,11 @@ export const abi = [
           },
           {
             "type": "string",
+            "name": "pdfURI",
+            "internalType": "string"
+          },
+          {
+            "type": "string",
             "name": "imageURI",
             "internalType": "string"
           },
@@ -313,6 +323,11 @@ export const abi = [
           {
             "type": "address[]",
             "name": "donors",
+            "internalType": "address[]"
+          },
+          {
+            "type": "address[]",
+            "name": "signers",
             "internalType": "address[]"
           }
         ],
@@ -336,6 +351,25 @@ export const abi = [
         "type": "uint256",
         "name": "",
         "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getTotalSigners",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_id",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "address[]",
+        "name": "",
+        "internalType": "address[]"
       }
     ],
     "stateMutability": "view"
@@ -424,6 +458,11 @@ export const abi = [
       },
       {
         "type": "string",
+        "name": "pdfURI",
+        "internalType": "string"
+      },
+      {
+        "type": "string",
         "name": "imageURI",
         "internalType": "string"
       },
@@ -434,6 +473,19 @@ export const abi = [
       }
     ],
     "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "sign",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_id",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
