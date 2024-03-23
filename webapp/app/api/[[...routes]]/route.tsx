@@ -20,7 +20,7 @@ const app = new Frog({
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
 
-const contractAdress = '0xa605Aa4D028f498faa89fb692c4EbDAc39217649'
+const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
 
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
@@ -41,7 +41,7 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
     publicClient.readContract({
       address: contractAdress,
       abi: abi,
-      functionName: 'getURI',
+      functionName: 'getImageURI',
       args : [id]
     }),
   ]);
