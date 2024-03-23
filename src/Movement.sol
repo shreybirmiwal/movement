@@ -8,6 +8,7 @@ contract MovementStorage {
         uint256 id;
         address creator;
         string name;
+        string pdfURI;
         string imageURI;
         uint256 funds;
         address[] donors;
@@ -27,10 +28,22 @@ contract Movement is MovementStorage, ERC20 {
         token = _token;
     }
 
-    function create(string memory _name, string memory _imageURI) public {
+    function create(
+        string memory _name,
+        string memory pdfURI,
+        string memory _imageURI
+    ) public {
         address[] memory _donors;
         petitions.push(
-            Petition(petitions.length, msg.sender, _name, _imageURI, 0, _donors)
+            Petition(
+                petitions.length,
+                msg.sender,
+                _name,
+                pdfURI,
+                _imageURI,
+                0,
+                _donors
+            )
         );
         emit petitioned(msg.sender, _name, petitions.length - 1);
     }
