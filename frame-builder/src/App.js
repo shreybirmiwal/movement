@@ -3,6 +3,7 @@ import { storage } from './firebase';
 import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { abi } from './abi';
 
 import {
   DynamicContextProvider,
@@ -15,7 +16,9 @@ import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
+
 function App() {
+
 
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
