@@ -6,11 +6,12 @@ import { devtools } from 'frog/dev'
 // import { neynar } from 'frog/hubs'
 import { handle } from 'frog/next'
 import { serveStatic } from 'frog/serve-static'
+import {storage} from '../../firebase'
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  origin: 'https://4cfd-92-204-97-110.ngrok-free.app'
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
@@ -18,18 +19,49 @@ const app = new Frog({
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
+function formatNumber(number: number): string {
+  return number.toLocaleString();
+}
 
-app.frame('/page/:id', (c) => {
+
+app.frame('/page/:id', async (c) => {
 
   const { id } = c.req.param()
-
   console.log(id)
+
+  var downloadURL = 'https://via.placeholder.com/150'
   
+  if(id != null && id != undefined && id != '' && id != ':id'){
+    const storageRef = ref(storage, id.toString());
+    downloadURL = await getDownloadURL(storageRef);
+  }
+
+  var signers = formatNumber(1000);
+
+
   return c.res({
     action: '/finish',
-    image: (<div>
-      {id}
-    </div>),
+    image: (
+      <div
+        style={{
+          backgroundImage: `url(${downloadURL})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat', // Prevent background image from repeating
+          width: '1200px',
+          height: '630px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          paddingBottom: '110px',
+        }}
+      >
+        <div style={{ fontSize: 100, color:'black', display:'flex' }}>
+          {signers.toString()}
+        </div>
+      </div>
+    ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target="/Donate">Send Donation</Button.Transaction>,
@@ -44,18 +76,12 @@ app.transaction('/Donate', (c) => {
 
   const { inputText } = c
 
-  return c.send({
-    chainId: 'eip155:10',
-    to: '',
-    value: parseEther(inputText),
-  })
-
-  // return c.contract({
-  //   abi,
-  //   chainId: 'eip155:84532',
-  //   functionName: '',
-  //   to: ''
-  // })
+   return c.contract({
+     abi,
+     chainId: 'eip155:84532',
+     functionName: '',
+     to: ''
+   })
 
 })
 

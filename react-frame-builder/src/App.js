@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { storage } from './firebase';
 import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,7 +10,9 @@ import {
 } from "@dynamic-labs/sdk-react-core";
 import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
-
+import {toBlob} from 'html-to-image';
+import { saveAs } from 'file-saver';
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 function App() {
 
@@ -28,6 +31,28 @@ function App() {
 
   const handleDonationAddressChange = (e) => {
     setDonationAddress(e.target.value);
+  };
+
+  const handleConvertToImage = async () => {
+    const divToConvert = document.getElementById('divToConvert');
+    if (!divToConvert) return;
+
+    let id;
+
+    try {
+      const blob = await toBlob(divToConvert, { pixelRatio: 2 });
+      const storageRef = ref(storage);
+      const listResult = await listAll(storageRef);
+      id = listResult.items.length + 1;
+      const fileRef = ref(storage, id.toString());
+      await uploadBytes(fileRef, blob);
+      console.log('Uploaded a blob to Firebase Storage');
+    } catch (error) {
+      console.error('Error uploading blob to Firebase Storage:', error);
+      return null;
+    }
+
+    return id;
   };
 
   const handleSubmit = () => {
@@ -63,10 +88,39 @@ function App() {
         progress: undefined,
         theme: "dark",
       });
+      return;
     }
 
+    var returnID;
+
+    handleConvertToImage().then(function(result){
+
+      if(result == null){
+        toast.error('Error uploading Movement!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        return;
+      }
+      else {
+        returnID = result;
+      }
+
+      console.log(result + "result") 
+      return result;
+
+    });
+
+
+
     
-    };
+  };
 
   return (
 
@@ -135,6 +189,14 @@ function App() {
             >
               Submit
             </button>
+            
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+              onClick={handleConvertToImage}
+            >
+              test button
+            </button>
+
           </div>
         </div>
 
@@ -143,16 +205,14 @@ function App() {
 
         <div className="flex w-1/2 justify-center items-center flex-col">
             
-          {/* the actual card that is displayed */}
           <div>
-            <div style={{backgroundColor: backgroundColor}} className={` w-[600px] h-[315px] rounded-md`}>
+            <div id="divToConvert" style={{backgroundColor: backgroundColor}} className={` w-[600px] h-[315px] rounded-md`}>
               <div className='text-center p-3'>
                 <h1 className="text-3xl font-bold mt-10">{movementTitle || '[Title goes here]'}</h1>
                 <h1 className="text-2xl mt-4">{movementDescription || '[Description goes here]'}</h1>
-                <h1 className='mt-5'> 0 people have joined this movement </h1>
+                <h1 className='mt-24'> People have joined this movement </h1>
               </div>
             </div>
-
             <div className='bg-gray-100 h-[122px]'>
 
               <div className='py-5 border'>
