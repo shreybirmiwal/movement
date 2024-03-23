@@ -4,7 +4,6 @@ import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { abi } from './abi';
-import { useAccount, useNetwork } from 'wagmi';
 
 import {
   DynamicContextProvider,
@@ -26,7 +25,6 @@ import {
 
 function App() {
 
-  const { address, isConnected } = useAccount();
   const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
 
   const { config } = usePrepareContractWrite({
@@ -87,18 +85,18 @@ function App() {
     console.log('Background Color:', backgroundColor);
     console.log('Donation Address:', donationAddress);
 
-    if(!isConnected){
-      toast.error('Ensure wallet is connected!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
+    // if(!isConnected){
+    //   toast.error('Ensure wallet is connected!', {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "dark",
+    //   });
+    // }
 
     if (!(movementTitle && movementDescription && donationAddress)) {
       toast.error('Ensure fields not left blank!', {
