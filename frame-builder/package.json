@@ -1,0 +1,56 @@
+{
+  "name": "frame-builder",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@dynamic-labs/ethereum": "^1.4.1",
+    "@dynamic-labs/ethereum-aa": "^1.4.1",
+    "@dynamic-labs/ethers-v5": "^1.4.1",
+    "@dynamic-labs/sdk-react-core": "^1.4.1",
+    "@dynamic-labs/wagmi-connector": "^1.4.1",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "deps": "^1.0.0",
+    "file-saver": "^2.0.5",
+    "firebase": "^10.9.0",
+    "html-to-image": "^1.11.11",
+    "react": "^18.2.0",
+    "react-colorful": "^5.6.1",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^10.0.5",
+    "toastify": "^2.0.1",
+    "viem": "^1.21.4",
+    "wagmi": "^1.4.13",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "typescript": ">=5.0.4"
+  }
+}
