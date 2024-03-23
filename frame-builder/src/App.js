@@ -15,15 +15,11 @@ import {ZeroDevSmartWalletConnectors} from "@dynamic-labs/ethereum-aa"
 import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
-import {useContractWrite} from 'wagmi'
+
 
 function App() {
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
-    address: '0xD594F07Dfa9CbBeD78a36F314Cff124ea252A71d',
-    abi: abi,
-    functionName: 'create',
-  })
+
 
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
@@ -120,13 +116,6 @@ function App() {
       else {
         returnID = result;
       }
-
-      write({
-        args: [movementTitle,returnID],
-        onSuccess(data) {
-          console.log('Success', data)
-        },
-      })
 
       console.log(result + "result") 
       return result;
