@@ -3,9 +3,9 @@ import { storage } from './firebase';
 import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ContractABI from './abi';
 import { useAccount, useNetwork } from 'wagmi';
 
+import {abi} from './abi.js'
 import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
@@ -16,8 +16,6 @@ import {
   DynamicContextProvider,
   DynamicWidget,
 } from "@dynamic-labs/sdk-react-core";
-
-import { abi } from './abi';
  
 function App() {
 
@@ -130,7 +128,7 @@ function App() {
         console.log(" ABOUT TO WRITE TO CONTRACT .. ")
 
         write({
-          args: [movementTitle, returnID],
+          args: [movementTitle, returnID, returnID],
           onError(error) {
             console.log('Error', error)
           },
