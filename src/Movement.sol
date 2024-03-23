@@ -55,10 +55,8 @@ contract Movement is MovementStorage, ERC20 {
         emit withdrew(msg.sender, petitions[_id].funds, _id);
     }
 
-    function getDonors(
-        uint256 _id
-    ) public view returns (address[] memory _donors) {
-        return petitions[_id].donors;
+    function getTotalDonors(uint256 _id) public view returns (uint256) {
+        return petitions[_id].donors.length;
     }
 
     function getPetitions() public view returns (Petition[] memory) {
