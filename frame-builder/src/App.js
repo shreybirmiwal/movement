@@ -4,6 +4,7 @@ import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { abi } from './abi';
+import { useAccount, useNetwork } from 'wagmi';
 
 import {
   DynamicContextProvider,
@@ -16,26 +17,27 @@ import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { YourApp } from './YourApp';
-// import {
-//   useContractWrite,
-//   usePrepareContractWrite,
-//   useWaitForTransaction,
-// } from 'wagmi';
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from 'wagmi';
 
 
 function App() {
 
-  // const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
+  const { address, isConnected } = useAccount();
+  const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
 
-  // const { config } = usePrepareContractWrite({
-  //   abi: abi,
-  //   address: contractAdress,
-  //   functionName: 'create',
-  // });
-  // const { data, write } = useContractWrite(config);
-  // const { isLoading, isSuccess } = useWaitForTransaction({
-  //   hash: data?.hash,
-  // });
+  const { config } = usePrepareContractWrite({
+    abi: abi,
+    address: contractAdress,
+    functionName: 'create',
+  });
+  const { data, write } = useContractWrite(config);
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
 
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
@@ -85,18 +87,18 @@ function App() {
     console.log('Background Color:', backgroundColor);
     console.log('Donation Address:', donationAddress);
 
-    // if(!isConnected){
-    //   toast.error('Ensure wallet is connected!', {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "dark",
-    //   });
-    // }
+    if(!isConnected){
+      toast.error('Ensure wallet is connected!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
 
     if (!(movementTitle && movementDescription && donationAddress)) {
       toast.error('Ensure fields not left blank!', {
