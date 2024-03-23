@@ -3,13 +3,12 @@ import { storage } from './firebase';
 import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { abi } from './abi';
 import { useAccount, useNetwork } from 'wagmi';
 
+import {abi} from './abi.js'
 import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
-import { YourApp } from './YourApp';
 
 import { useContractWrite } from 'wagmi' 
 
@@ -17,13 +16,12 @@ import {
   DynamicContextProvider,
   DynamicWidget,
 } from "@dynamic-labs/sdk-react-core";
-
-
+ 
 function App() {
 
   const { address, isConnected } = useAccount();
 
-  const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
+  const contractAdress = '0xa605Aa4D028f498faa89fb692c4EbDAc39217649'
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
     address: contractAdress,
@@ -35,6 +33,7 @@ function App() {
   const [movementDescription, setMovementDescription] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#96b7ff');
   const [donationAddress, setDonationAddress] = useState('');
+  const [selectedPDF, setSelectedPDF] = useState(null);
 
   const handleTitleChange = (e) => {
     setMovementTitle(e.target.value);
@@ -53,6 +52,7 @@ function App() {
     if (!divToConvert) return;
 
     let downloadURL;
+    let pdfUrl;
 
     try {
       const blob = await toBlob(divToConvert, { pixelRatio: 2 });
@@ -64,12 +64,23 @@ function App() {
       console.log('Uploaded a blob to Firebase Storage');
       downloadURL = await getDownloadURL(fileRef);
       console.log('Download URL:', downloadURL);
+
+      //also uploda the pdf
+      const fileRef2 = ref(storage, (id+1).toString()); 
+      await uploadBytes(fileRef2, selectedPDF[0]);
+      pdfUrl = await getDownloadURL(fileRef2);
+
     } catch (error) {
       console.error('Error uploading blob to Firebase Storage:', error);
       return null;
     }
 
-    return downloadURL;
+    return {downloadURL, pdfUrl};
+  };
+
+  const handlePDFUpload = (event) => {
+    const file = event.target.files[0];
+    setSelectedPDF(file);
   };
 
   const handleSubmit = () => {
@@ -94,7 +105,7 @@ function App() {
       });
     }
 
-    if (!(movementTitle && movementDescription && donationAddress)) {
+    if (!(movementTitle && movementDescription && selectedPDF)) {
       toast.error('Ensure fields not left blank!', {
         position: "top-right",
         autoClose: 5000,
@@ -108,11 +119,11 @@ function App() {
       return;
     }
 
-    var returnID;
+    console.log('About to convert to image...')
 
-    handleConvertToImage().then(function(result){
+    handleConvertToImage().then(function({downloadURL, pdfUrl}){
 
-      if(result == null){
+      if(downloadURL == null || pdfUrl == null){
         toast.error('Error uploading Movement!', {
           position: "top-right",
           autoClose: 5000,
@@ -126,11 +137,10 @@ function App() {
         return;
       }
       else {
-        returnID = result;
         console.log(" ABOUT TO WRITE TO CONTRACT .. ")
 
         write({
-          args: [movementTitle, returnID],
+          args: [movementTitle, pdfUrl, downloadURL],
           onError(error) {
             console.log('Error', error)
           },
@@ -147,9 +157,9 @@ function App() {
 
       }
 
-
-      console.log(result + "result") 
-      return result;
+      //console.log(result + "result") 
+      //return result;
+      return;
 
     });
     
@@ -199,12 +209,21 @@ function App() {
               <HexColorPicker color={backgroundColor} onChange={setBackgroundColor} className='mb-4 w-32' />
             </div>
 
-            <input
+            {/* <input
               type="text"
               placeholder="What address should donations be sent to?"
               className="border border-gray-300 rounded px-4 py-2 mb-4 w-full"
               value={donationAddress}
               onChange={handleDonationAddressChange}
+            /> */}
+            
+            <h1 className='text-gray-400'> Where can signers learn about what they are signing?</h1>
+            <input
+              className="border border-gray-300 rounded px-4 py-2 mb-4 w-full mt-4"
+              type="file"
+              accept=".pdf"
+              onChange={handlePDFUpload}
+              placeholder='Upload Contract PDF'
             />
 
             <button
@@ -214,12 +233,6 @@ function App() {
               Submit
             </button>
             
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
-              onClick={handleConvertToImage}
-            >
-              test button
-            </button>
 
           </div>
         </div>
