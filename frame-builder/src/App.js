@@ -129,8 +129,18 @@ function App() {
 
         write({
           args: [movementTitle, returnID],
+          onError(error) {
+            console.log('Error', error)
+          },
+          onSuccess(data) {
+            console.log('Success', data)
+          },
         })
 
+        if(isSuccess){
+          console.log("SUCCESS")
+          console.log(JSON.stringify(data))
+        }
         console.log("ADDED SMART CONTRACT ")
 
       }
