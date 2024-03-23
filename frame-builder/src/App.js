@@ -3,13 +3,12 @@ import { storage } from './firebase';
 import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { abi } from './abi';
+import ContractABI from './abi';
 import { useAccount, useNetwork } from 'wagmi';
 
 import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
-import { YourApp } from './YourApp';
 
 import { useContractWrite } from 'wagmi' 
 
@@ -18,7 +17,8 @@ import {
   DynamicWidget,
 } from "@dynamic-labs/sdk-react-core";
 
-
+import { abi } from './abi';
+ 
 function App() {
 
   const { address, isConnected } = useAccount();

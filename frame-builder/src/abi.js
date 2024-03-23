@@ -1,5 +1,4 @@
-export const abi = 
-[
+export const abi = [
     {
       "type": "constructor",
       "name": "",
