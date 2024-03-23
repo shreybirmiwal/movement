@@ -200,8 +200,6 @@ function App() {
                 <h1 className='mt-24'> People have joined this movement </h1>
               </div>
             </div>
-
-            <div className='bg-gray-100 h-[122px]'></div>
             <div className='bg-gray-100 h-[122px]'>
 
               <div className='py-5 border'>
