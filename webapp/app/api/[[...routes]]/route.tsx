@@ -126,7 +126,7 @@ app.frame('/page/:id', async (c) => {
           flexDirection: 'column',
           justifyContent: 'flex-end',
           alignItems: 'center',
-          paddingBottom: '110px',
+          paddingBottom: '90px',
         }}
       >
         <div style={{ fontSize: 100, color:'black', display:'flex' }}>
@@ -137,7 +137,7 @@ app.frame('/page/:id', async (c) => {
     intents: [
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target={"/Donate/"+id}>Donate</Button.Transaction>,
-      <Button.Link href="https://www.ethsign.xyz/">Sign</Button.Link>,
+      <Button.Transaction target={"/Sign/"+id}>Sign</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
       <Button.Link href="http://localhost:3001/">Start your Movement</Button.Link>,
     ],
@@ -162,7 +162,19 @@ app.transaction('/Donate/:id', (c) => {
    })
 
 })
+app.transaction('/Sign/:id', (c) => {
+  // Contract transaction response.
+  const { id } = c.req.param()
+  console.log(" in sign page, got ID " + id)
+   return c.contract({
+     abi,
+     chainId: 'eip155:84532',
+     functionName: 'sign',
+     to: contractAdress,
+     args: [id] 
+   })
 
+})
 
 
 app.frame('/finish', (c) => {
