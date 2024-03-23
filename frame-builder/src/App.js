@@ -66,7 +66,7 @@ function App() {
       console.log('Download URL:', downloadURL);
 
       //also uploda the pdf
-      const fileRef2 = ref(storage, (id+1).toString()); 
+      const fileRef2 = ref(storage, (id+1).toString()+'.pdf'); 
       await uploadBytes(fileRef2, selectedPDF[0]);
       pdfUrl = await getDownloadURL(fileRef2);
 
