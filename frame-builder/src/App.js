@@ -10,12 +10,8 @@ import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { YourApp } from './YourApp';
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
-} from 'wagmi';
 
+import { useContractWrite } from 'wagmi' 
 
 import {
   DynamicContextProvider,
@@ -29,15 +25,11 @@ function App() {
 
   const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
 
-  const { config } = usePrepareContractWrite({
+  const { data, isLoading, isSuccess, write } = useContractWrite({
+    address: address,
     abi: abi,
-    address: contractAdress,
     functionName: 'create',
-  });
-  const { data, write } = useContractWrite(config);
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  });
+  })
 
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
@@ -134,9 +126,15 @@ function App() {
       else {
         returnID = result;
         console.log(" ABOUT TO WRITE TO CONTRACT .. ")
-        write([movementTitle, returnID]);
+
+        write({
+          args: [movementTitle, returnID],
+        })
+
+        console.log("ADDED SMART CONTRACT ")
 
       }
+
 
       console.log(result + "result") 
       return result;
