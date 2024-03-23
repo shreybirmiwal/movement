@@ -4,11 +4,13 @@
   "private": true,
   "dependencies": {
     "@dynamic-labs/ethereum": "^1.4.1",
+    "@dynamic-labs/ethereum-aa": "^1.4.1",
     "@dynamic-labs/sdk-react-core": "^1.4.1",
     "@dynamic-labs/wagmi-connector": "^1.4.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "abitype": "^1.0.2",
     "file-saver": "^2.0.5",
     "firebase": "^10.9.0",
     "html-to-image": "^1.11.11",
