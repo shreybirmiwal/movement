@@ -5,13 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { abi } from './abi';
 
-import {
-  DynamicContextProvider,
-  DynamicWidget,
-} from "@dynamic-labs/sdk-react-core";
-import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
-import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
-import {ZeroDevSmartWalletConnectors} from "@dynamic-labs/ethereum-aa"
+
 import {toBlob} from 'html-to-image';
 import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
@@ -128,19 +122,6 @@ function App() {
 
   return (
 
-    <DynamicContextProvider
-    settings={{
-      // Find your environment id at https://app.dynamic.xyz/dashboard/developer
-      environmentId: '0ca24247-9679-4abc-8963-bb5f36ad358b',
-      walletConnectors: [EthereumWalletConnectors, ZeroDevSmartWalletConnectors],
-    }}
-    >
-      <DynamicWagmiConnector>
-
-
-      <div className='p-10'>
-        <DynamicWidget />
-      </div>
 
     <div>
 
@@ -260,8 +241,6 @@ function App() {
 
     </div>
     
-    </DynamicWagmiConnector>
-    </DynamicContextProvider>
   );
 }
 
