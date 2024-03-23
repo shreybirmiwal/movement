@@ -20,7 +20,7 @@ const app = new Frog({
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
 
-const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
+const contractAdress = '0xa605Aa4D028f498faa89fb692c4EbDAc39217649'
 
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
