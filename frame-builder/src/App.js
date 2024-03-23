@@ -35,7 +35,7 @@ function App() {
   const { data, write } = useContractWrite(config);
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
-  });
+  });``
 
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
