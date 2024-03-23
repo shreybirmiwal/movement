@@ -26,7 +26,7 @@ function App() {
   const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
-    address: address,
+    address: contractAdress,
     abi: abi,
     functionName: 'create',
   })
@@ -52,22 +52,24 @@ function App() {
     const divToConvert = document.getElementById('divToConvert');
     if (!divToConvert) return;
 
-    let id;
+    let downloadURL;
 
     try {
       const blob = await toBlob(divToConvert, { pixelRatio: 2 });
       const storageRef = ref(storage);
       const listResult = await listAll(storageRef);
-      id = listResult.items.length + 1;
+      const id = listResult.items.length + 1;
       const fileRef = ref(storage, id.toString());
       await uploadBytes(fileRef, blob);
       console.log('Uploaded a blob to Firebase Storage');
+      downloadURL = await getDownloadURL(fileRef);
+      console.log('Download URL:', downloadURL);
     } catch (error) {
       console.error('Error uploading blob to Firebase Storage:', error);
       return null;
     }
 
-    return id;
+    return downloadURL;
   };
 
   const handleSubmit = () => {
