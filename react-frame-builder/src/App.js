@@ -44,10 +44,13 @@ function App() {
       const blob = await toBlob(divToConvert, { pixelRatio: 2 });
       const storageRef = ref(storage);
       const listResult = await listAll(storageRef);
-      id = listResult.items.length + 1;
+      const id = listResult.items.length + 1;
       const fileRef = ref(storage, id.toString());
       await uploadBytes(fileRef, blob);
       console.log('Uploaded a blob to Firebase Storage');
+      const downloadURL = await getDownloadURL(fileRef);
+      console.log('File download URL:', downloadURL);
+      return downloadURL;
     } catch (error) {
       console.error('Error uploading blob to Firebase Storage:', error);
       return null;
