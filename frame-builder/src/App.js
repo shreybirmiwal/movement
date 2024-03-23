@@ -20,7 +20,6 @@ import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/
 function App() {
 
 
-
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#96b7ff');
