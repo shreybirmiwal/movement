@@ -64,6 +64,16 @@ app.frame('/page/:id', async (c) => {
     totalDonors = data.totalDonors;
     downloadURL = data.downloadURL;
   }
+  else {
+
+    return c.res({
+      image: './error.png',
+      intents: [
+        <Button.Reset>Reset</Button.Reset>,
+      ],
+    })
+  
+    }
 
   var signers = formatNumber(totalDonors);
 
