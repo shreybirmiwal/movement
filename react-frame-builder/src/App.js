@@ -16,7 +16,7 @@ import { saveAs } from 'file-saver';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 function App() {
-
+  
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#96b7ff');
