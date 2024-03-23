@@ -4,39 +4,38 @@ import { HexColorPicker } from "react-colorful";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { abi } from './abi';
-import {toBlob} from 'html-to-image';
-import { saveAs } from 'file-saver';
-import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 import {
   DynamicContextProvider,
   DynamicWidget,
-} from '@dynamic-labs/sdk-react-core';
-import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
+} from "@dynamic-labs/sdk-react-core";
+import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
+import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import {ZeroDevSmartWalletConnectors} from "@dynamic-labs/ethereum-aa"
-import { DynamicWagmiConnector } from '@dynamic-labs/wagmi-connector';
+import {toBlob} from 'html-to-image';
+import { saveAs } from 'file-saver';
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
+import { YourApp } from './YourApp';
 import {
-  createConfig,
-  WagmiProvider,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
 } from 'wagmi';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { http } from 'viem';
-import { mainnet } from 'viem/chains';
-
-const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
-
-const config = createConfig({
-  chains: [mainnet],
-  multiInjectedProviderDiscovery: false,
-  transports: {
-    [mainnet.id]: http(),
-  },
-});
-const queryClient = new QueryClient();
 
 
 function App() {
 
+  const contractAdress = '0x5A9f1218BF93e7B3480fd226e3756C375FA34309'
+
+  const { config } = usePrepareContractWrite({
+    abi: abi,
+    address: contractAdress,
+    functionName: 'create',
+  });
+  const { data, write } = useContractWrite(config);
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
 
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
@@ -133,6 +132,7 @@ function App() {
       else {
         returnID = result;
         console.log(" ABOUT TO WRITE TO CONTRACT .. ")
+        write([movementTitle, returnID]);
 
       }
 
@@ -152,14 +152,13 @@ function App() {
       walletConnectors: [EthereumWalletConnectors, ZeroDevSmartWalletConnectors],
     }}
     >
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <DynamicWagmiConnector>
+      <DynamicWagmiConnector>
+
 
       <div className='p-10'>
         <DynamicWidget />
       </div>
-
+    <YourApp/>
     <div>
 
       {/*TIT:E */}
@@ -278,8 +277,6 @@ function App() {
     </div>
     
     </DynamicWagmiConnector>
-        </QueryClientProvider>
-      </WagmiProvider>
     </DynamicContextProvider>
   );
 }
