@@ -15,7 +15,7 @@ import { formatEther } from 'viem'
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  origin: 'https://52c7-70-123-51-67.ngrok-free.app',
+  origin: 'https://bde5-198-217-29-1.ngrok-free.app',
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
@@ -52,6 +52,18 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
     return { totalDonors, downloadURL }
 }
 
+
+app.frame('/', async (c) => {
+  return c.res({
+    action: '/page/1',
+    image: (<div>
+      
+    </div>),
+    intents: [
+      <Button.Link href="http://localhost:3001/">Start your Movement</Button.Link>,
+    ],
+  })
+})
 
 app.frame('/page/:id', async (c) => {
 
