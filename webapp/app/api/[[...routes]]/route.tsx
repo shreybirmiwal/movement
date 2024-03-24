@@ -19,7 +19,7 @@ const app = new Frog({
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
 
-const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
+const contractAdress = '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B'
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
@@ -128,7 +128,7 @@ app.frame('/page/:id', async (c) => {
           alignItems: 'center',
         }}
       >
-        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '120px' }}>
+        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '175px' }}>
           {signers.toString()}
         </div>
       </div>
@@ -151,6 +151,8 @@ app.transaction('/donate/:id', (c) => {
   console.log(" in donate page, got ID " + id)
   const { inputText } = c
   console.log(" in donate page, got inputText " + inputText)
+
+  console.log( "calling DONATE WITH " + Number(id) + " " + (Number(inputText)*10^18));
 
    return c.contract({
      abi,
