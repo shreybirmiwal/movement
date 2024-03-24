@@ -154,13 +154,19 @@ app.transaction('/donate/:id', (c) => {
 
   console.log( "calling DONATE WITH " + Number(id) + " " + (Number(inputText)*10^18));
 
-   return c.contract({
-     abi,
-     chainId: 'eip155:84532',
-     functionName: 'donate',
-     to: contractAdress,
-     args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
-   })
+  //  return c.contract({
+  //    abi,
+  //    chainId: 'eip155:84532',
+  //    functionName: 'donate',
+  //    to: contractAdress,
+  //    args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
+  //  })
+
+   return c.send({
+    chainId: 'eip155:84532',
+    to: contractAdress,
+    value: parseEther(inputText),
+  })
 
 })
 app.transaction('/sign/:id', (c) => {
