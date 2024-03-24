@@ -5,25 +5,6 @@ export const abi =[
 			{
 				"indexed": false,
 				"internalType": "address",
-				"name": "signee",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "donated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
 				"name": "creator",
 				"type": "address"
 			},
@@ -41,31 +22,6 @@ export const abi =[
 			}
 		],
 		"name": "petitioned",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "creator",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "withdrew",
 		"type": "event"
 	},
 	{
@@ -99,9 +55,15 @@ export const abi =[
 				"type": "uint256"
 			}
 		],
-		"name": "donate",
-		"outputs": [],
-		"stateMutability": "payable",
+		"name": "getDonationAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -205,25 +167,6 @@ export const abi =[
 				"type": "uint256"
 			}
 		],
-		"name": "getTotalDonors",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
 		"name": "getTotalSigners",
 		"outputs": [
 			{
@@ -288,19 +231,6 @@ export const abi =[
 			}
 		],
 		"name": "sign",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "withdraw",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

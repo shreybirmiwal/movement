@@ -33,7 +33,6 @@ function App() {
   const [movementTitle, setMovementTitle] = useState('');
   const [movementDescription, setMovementDescription] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#96b7ff');
-  const [donationAddress, setDonationAddress] = useState('');
   const [selectedPDF, setSelectedPDF] = useState(null);
 
   const handleTitleChange = (e) => {
@@ -44,9 +43,7 @@ function App() {
     setMovementDescription(e.target.value);
   };
 
-  const handleDonationAddressChange = (e) => {
-    setDonationAddress(e.target.value);
-  };
+
 
   //    event petitioned(address creator, string indexed name, uint256 indexed id);
 
@@ -137,7 +134,6 @@ function App() {
     console.log('Movement Title:', movementTitle);
     console.log('Movement Description:', movementDescription);
     console.log('Background Color:', backgroundColor);
-    console.log('Donation Address:', donationAddress);
 
     // if(!isConnected){
     //   toast.error('Ensure wallet is connected!', {
@@ -152,7 +148,7 @@ function App() {
     //   });
     // }
 
-    if (!(movementTitle && movementDescription && selectedPDF && donationAddress)) {
+    if (!(movementTitle && movementDescription && selectedPDF )) {
       toast.error('Ensure fields not left blank!', {
         position: "top-right",
         autoClose: 5000,
@@ -187,7 +183,7 @@ function App() {
         console.log(" ABOUT TO WRITE TO CONTRACT .. ")
 
         write({
-          args: [movementTitle, pdfUrl, downloadURL, donationAddress],
+          args: [movementTitle, pdfUrl, downloadURL],
           onError(error) {
             console.log('Error', error)
           },
@@ -273,13 +269,6 @@ function App() {
               placeholder='Upload Contract PDF'
             />
 
-            <input
-              type="text"
-              placeholder="Where should donations be sent?"
-              className="border border-gray-300 rounded px-4 py-2 mb-4 w-full"
-              value={donationAddress}
-              onChange={handleDonationAddressChange}
-            />
 
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
