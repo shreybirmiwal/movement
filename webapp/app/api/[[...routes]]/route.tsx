@@ -146,14 +146,14 @@ app.frame('/page/:id', async (c) => {
 })
 
 
-app.transaction('/donate/:id', (c) => {
+app.transaction('/donate', (c) => {
   // Contract transaction response.
-  const { id } = c.req.param()
-  console.log(" in donate page, got ID " + id)
+  // const { id } = c.req.param()
+  // console.log(" in donate page, got ID " + id)
   const { inputText } = c
-  console.log(" in donate page, got inputText " + inputText)
+  // console.log(" in donate page, got inputText " + inputText)
 
-  console.log( "calling DONATE WITH " + Number(id) + " " + (Number(inputText)*10^18));
+  // console.log( "calling DONATE WITH " + Number(id) + " " + (Number(inputText)*10^18));
 
   //  return c.contract({
   //    abi,
@@ -165,7 +165,7 @@ app.transaction('/donate/:id', (c) => {
   
   return c.send({
     chainId: 'eip155:84532',
-    to: contractAdress,
+    to: '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B',
     value: parseEther(inputText ?? '')
   })
 
