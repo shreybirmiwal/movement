@@ -137,6 +137,7 @@ app.frame('/page/:id', async (c) => {
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
       <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
+      <Button.Transaction target="/send-ether">Send Ether</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
       <Button.Link href="https://frame-builder.vercel.app/">Start your Movement</Button.Link>,
     ],
@@ -161,14 +162,25 @@ app.transaction('/donate/:id', (c) => {
   //    to: contractAdress,
   //    args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
   //  })
-
+  
   return c.send({
     chainId: 'eip155:84532',
     to: contractAdress,
-    value: parseEther(String(inputText || '0')),
+    value: parseEther(inputText ?? '')
   })
 
 })
+
+app.transaction('/send-ether', (c) => {
+  const { inputText } = c
+  // Send transaction response.
+  return c.send({
+    chainId: 'eip155:10',
+    to: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
+    value: parseEther(inputText ?? '')
+  })
+})
+
 app.transaction('/sign/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
