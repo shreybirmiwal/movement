@@ -19,7 +19,7 @@ const app = new Frog({
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
 
-const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
+const contractAdress = '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B'
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
@@ -33,7 +33,7 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
     publicClient.readContract({
       address: contractAdress,
       abi: abi,
-      functionName: 'getTotalDonors',
+      functionName: 'getTotalSigners',
       args : [id]
     }),
     publicClient.readContract({
@@ -128,7 +128,7 @@ app.frame('/page/:id', async (c) => {
           alignItems: 'center',
         }}
       >
-        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '20px' }}>
+        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '175px' }}>
           {signers.toString()}
         </div>
       </div>
@@ -137,6 +137,7 @@ app.frame('/page/:id', async (c) => {
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
       <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
+      <Button.Transaction target="/send-ether">Send Ether</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
       <Button.Link href="https://frame-builder.vercel.app/">Start your Movement</Button.Link>,
     ],
@@ -152,15 +153,34 @@ app.transaction('/donate/:id', (c) => {
   const { inputText } = c
   console.log(" in donate page, got inputText " + inputText)
 
-   return c.contract({
-     abi,
-     chainId: 'eip155:84532',
-     functionName: 'donate',
-     to: contractAdress,
-     args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
-   })
+  console.log( "calling DONATE WITH " + Number(id) + " " + (Number(inputText)*10^18));
+
+  //  return c.contract({
+  //    abi,
+  //    chainId: 'eip155:84532',
+  //    functionName: 'donate',
+  //    to: contractAdress,
+  //    args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
+  //  })
+  
+  return c.send({
+    chainId: 'eip155:84532',
+    to: contractAdress,
+    value: parseEther(inputText ?? '')
+  })
 
 })
+
+app.transaction('/send-ether', (c) => {
+  const { inputText } = c
+  // Send transaction response.
+  return c.send({
+    chainId: 'eip155:84532',
+    to: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
+    value: parseEther(inputText ?? '')
+  })
+})
+
 app.transaction('/sign/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()

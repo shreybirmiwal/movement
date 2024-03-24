@@ -23,7 +23,7 @@ function App() {
 
   const { address, isConnected } = useAccount();
 
-  const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
+  const contractAdress = '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B'
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
     address: contractAdress,
@@ -139,18 +139,18 @@ function App() {
     console.log('Background Color:', backgroundColor);
     console.log('Donation Address:', donationAddress);
 
-    if(!isConnected){
-      toast.error('Ensure wallet is connected!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
+    // if(!isConnected){
+    //   toast.error('Ensure wallet is connected!', {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "dark",
+    //   });
+    // }
 
     if (!(movementTitle && movementDescription && selectedPDF)) {
       toast.error('Ensure fields not left blank!', {
