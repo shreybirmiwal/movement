@@ -52,9 +52,9 @@ contract Movement is MovementStorage {
         petitions[_id].signers.push(msg.sender);
     }
 
-    function donate(uint256 _id, uint256 _amount) public payable {
-        if (msg.value != _amount) {
-            revert("Movement: Incorrect donation amount");
+    function donate(uint256 _id) public payable {
+        if (msg.value == 0) {
+            revert("Movement: Invalid donation amount");
         }
 
         bool isDonor = false;
@@ -69,7 +69,7 @@ contract Movement is MovementStorage {
             petitions[_id].donors.push(msg.sender);
         }
 
-        petitions[_id].funds += _amount;
+        petitions[_id].funds += msg.value;
         emit donated(msg.sender, _id);
     }
 
