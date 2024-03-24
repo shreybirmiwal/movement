@@ -168,6 +168,7 @@ app.transaction('/donate/:id', async (c)  => {
   const { inputText } = c
   console.log(" in donate page, got ID " + id)
   console.log(" in donate page, got inputText " + inputText)
+  console.log(" in donate page, got PARSED INPUT TEXT " + parseEther(inputText ?? ''))
 
   const data = await getDonationAddy(Number(id));
   var DONNYADDY = `0x${data.DonationAddress2.substring(2)}`
