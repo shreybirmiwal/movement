@@ -13,6 +13,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/
 import { publicClient } from './client'
 import { formatEther } from 'viem'
 
+import { abi2 } from './abi2'
+
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
@@ -21,7 +23,6 @@ const app = new Frog({
 })
 
 const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
-
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
@@ -78,6 +79,17 @@ app.frame('/', async (c) => {
     ],
   })
 })
+
+app.transaction('/Increment', (c) => {
+  // Contract transaction response.
+  return c.contract({
+    abi2,
+    chainId: 'eip155:84532',
+    functionName: 'increment',
+    to: '0xBe6449Bfe2DC633A91431740Ee3D502aEdD374ED'
+  })
+})
+
 
 app.frame('/page/:id', async (c) => {
 
