@@ -11,8 +11,6 @@ import {storage} from '../../firebase'
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { publicClient } from './client'
 import { formatEther } from 'viem'
-import { abiToken } from './abiToken'
-
 
 const app = new Frog({
   assetsPath: '/',
@@ -22,7 +20,6 @@ const app = new Frog({
 })
 
 const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
-const tokenAdress = '0x1f51E32d78894C0264181F2908f9459Fc7563555'
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
