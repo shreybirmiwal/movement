@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
 contract MovementStorage {
     struct Petition {
         uint256 id;
@@ -22,16 +20,10 @@ contract MovementStorage {
     event withdrew(address creator, uint256 amount, uint256 indexed id);
 }
 
-contract Movement is MovementStorage, ERC20 {
-    address public immutable token;
-
-    constructor(address _token) ERC20("Movement", "MVMT") {
-        token = _token;
-    }
-
+contract Movement is MovementStorage {
     function create(
         string memory _name,
-        string memory pdfURI,
+        string memory _pdfURI,
         string memory _imageURI
     ) public {
         address[] memory _donors;
@@ -41,7 +33,7 @@ contract Movement is MovementStorage, ERC20 {
                 petitions.length,
                 msg.sender,
                 _name,
-                pdfURI,
+                _pdfURI,
                 _imageURI,
                 0,
                 _donors,
@@ -60,9 +52,11 @@ contract Movement is MovementStorage, ERC20 {
         petitions[_id].signers.push(msg.sender);
     }
 
-    function donate(uint256 _id, uint256 _amount) public {
-        ERC20(token).approve(address(this), _amount);
-        ERC20(token).transferFrom(msg.sender, address(this), _amount);
+    function donate(uint256 _id, uint256 _amount) public payable {
+        if (msg.value != _amount) {
+            revert("Movement: Incorrect donation amount");
+        }
+
         bool isDonor = false;
         for (uint256 i = 0; i < petitions[_id].donors.length; i++) {
             if (petitions[_id].donors[i] == msg.sender) {
@@ -87,7 +81,7 @@ contract Movement is MovementStorage, ERC20 {
         }
 
         petitions[_id].funds = 0;
-        ERC20(token).transfer(msg.sender, petitions[_id].funds);
+        payable(msg.sender).transfer(petitions[_id].funds);
         emit withdrew(msg.sender, petitions[_id].funds, _id);
     }
 

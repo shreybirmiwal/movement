@@ -14,5 +14,7 @@ Bounties:
 [X] 2. Dynamic: Best Integration ⸺ $1,000
 [X] 3. Base: Most Creative Frame ⸺ $1,000
 
-TBD
-1. Airstack: Best use of Airstack ⸺ $2,000
+To do:
+1. Alchemy AA API
+2. Donate button
+3. Record video
