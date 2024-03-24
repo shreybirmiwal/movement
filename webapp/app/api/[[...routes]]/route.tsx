@@ -138,8 +138,8 @@ app.frame('/page/:id', async (c) => {
     ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
-      <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
-      <Button.Transaction target={"/Increment"}>Sign</Button.Transaction>,
+      <Button.Transaction target={"/Increment"}>Donate</Button.Transaction>,
+      <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
       <Button.Link href="http://localhost:3001/">Start your Movement</Button.Link>,
     ],
