@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@alchemy/aa-accounts": "^3.6.1",
+    "@alchemy/aa-alchemy": "^3.6.1",
+    "@alchemy/aa-core": "^3.6.1",
     "@dynamic-labs/ethereum": "^1.4.1",
     "@dynamic-labs/ethereum-aa": "^1.4.1",
     "@dynamic-labs/sdk-react-core": "^1.4.1",
