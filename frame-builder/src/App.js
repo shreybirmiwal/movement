@@ -23,7 +23,7 @@ function App() {
 
   const { address, isConnected } = useAccount();
 
-  const contractAdress = '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B'
+  const contractAdress = '0xf1cAb9E24b897ed56DDCE7ED042484A45548c4f8'
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
     address: contractAdress,
