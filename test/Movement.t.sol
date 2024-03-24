@@ -36,21 +36,4 @@ contract MovementTest is Test {
         assert(petitions[0].signers.length == 1);
         assert(petitions[0].signers[0] == sree);
     }
-
-    function testDonate() public {
-        testCreate();
-        vm.startPrank(sree);
-        movement.donate{value: 1 * 10 ** 18}(0);
-        vm.stopPrank();
-        Movement.Petition[] memory petitions = movement.getPetitions();
-        assert(petitions[0].funds == 1 ether);
-        assert(petitions[0].donors.length == 1);
-    }
-
-    // function testWithdraw() public {
-    //     testDonate();
-    //     movement.withdraw(0);
-    //     Movement.Petition[] memory petitions = movement.getPetitions();
-    //     assert(petitions[0].funds == 0 ether);
-    // }
 }

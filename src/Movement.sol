@@ -16,8 +16,6 @@ contract MovementStorage {
     Petition[] public petitions;
 
     event petitioned(address creator, string indexed name, uint256 indexed id);
-    event donated(address signee, uint256 indexed id);
-    event withdrew(address creator, uint256 amount, uint256 indexed id);
 }
 
 contract Movement is MovementStorage {
@@ -52,43 +50,6 @@ contract Movement is MovementStorage {
         petitions[_id].signers.push(msg.sender);
     }
 
-    function donate(uint256 _id) public payable {
-        if (msg.value == 0) {
-            revert("Movement: Invalid donation amount");
-        }
-
-        bool isDonor = false;
-        for (uint256 i = 0; i < petitions[_id].donors.length; i++) {
-            if (petitions[_id].donors[i] == msg.sender) {
-                isDonor = true;
-                break;
-            }
-        }
-
-        if (!isDonor) {
-            petitions[_id].donors.push(msg.sender);
-        }
-
-        petitions[_id].funds += msg.value;
-        emit donated(msg.sender, _id);
-    }
-
-    function withdraw(uint256 _id) public {
-        if (petitions[_id].creator != msg.sender) {
-            revert("Movement: Access denied");
-        } else if (petitions[_id].funds == 0) {
-            revert("Movement: No funds available");
-        }
-
-        petitions[_id].funds = 0;
-        payable(msg.sender).transfer(petitions[_id].funds);
-        emit withdrew(msg.sender, petitions[_id].funds, _id);
-    }
-
-    function getTotalDonors(uint256 _id) public view returns (uint256) {
-        return petitions[_id].donors.length;
-    }
-
     function getTotalSigners(uint256 _id) public view returns (uint256) {
         return petitions[_id].signers.length;
     }
@@ -99,6 +60,10 @@ contract Movement is MovementStorage {
 
     function getImageURI(uint _id) public view returns (string memory) {
         return petitions[_id].imageURI;
+    }
+
+    function getDonationAddress(uint _id) public view returns (address) {
+        return petitions[_id].creator;
     }
 
     function getPDFURI(uint _id) public view returns (string memory) {
