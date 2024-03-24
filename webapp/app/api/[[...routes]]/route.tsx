@@ -98,14 +98,14 @@ app.frame('/', async (c) => {
 app.frame('/page/:id', async (c) => {
 
   const { id } = c.req.param()
-  console.log("the id is " + id)
+  //console.log("the id is " + id)
 
   var downloadURL = 'https://via.placeholder.com/150'
   var totalDonors = 0
   var pdfURL = 'https://via.placeholder.com/150'
   
   if(id != null && id != undefined && id != '' && id != ':id'){
-    console.log("GETTING SM CONTRACT DATA !")
+    //console.log("GETTING SM CONTRACT DATA !")
     const data = await getData(Number(id));
     totalDonors = data.totalDonors;
     downloadURL = data.downloadURL;
@@ -123,7 +123,7 @@ app.frame('/page/:id', async (c) => {
     }
 
   var signers = formatNumber(totalDonors);
-  console.log(signers + " " + downloadURL)
+  //console.log(signers + " " + downloadURL)
 
 
 
@@ -153,7 +153,6 @@ app.frame('/page/:id', async (c) => {
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
       <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
-      <Button.Transaction target="/send-ether">Send Ether</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
       <Button.Link href="https://frame-builder.vercel.app/">Start your Movement</Button.Link>,
     ],
@@ -207,7 +206,7 @@ app.transaction('/send-ether', (c) => {
 app.transaction('/sign/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
-  console.log(" in sign page, got ID " + id)
+  //console.log(" in sign page, got ID " + id)
    return c.contract({
      abi,
      chainId: 'eip155:84532',
