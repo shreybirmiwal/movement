@@ -14,8 +14,6 @@ import { formatEther } from 'viem'
 import { abiToken } from './abiToken'
 import { useAccount } from 'wagmi';
 
-const { address, isConnected } = useAccount();
-
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
@@ -151,6 +149,9 @@ app.frame('/page/:id', async (c) => {
 })
 
 app.transaction('/approve/:id', (c) => {
+
+  const { address } = useAccount();
+
   // Contract transaction response.
   const { id } = c.req.param()
   console.log(" in approve page, got ID " + id)
