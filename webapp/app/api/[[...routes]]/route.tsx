@@ -13,7 +13,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/
 import { publicClient } from './client'
 import { formatEther } from 'viem'
 
-import { abi2 } from './abi2'
+import { abiToken } from './abiToken'
 
 const app = new Frog({
   assetsPath: '/',
@@ -23,6 +23,7 @@ const app = new Frog({
 })
 
 const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
+const tokenAdress = '0x1f51E32d78894C0264181F2908f9459Fc7563555'
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
@@ -138,6 +139,7 @@ app.frame('/page/:id', async (c) => {
     ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
+      <Button.Transaction target={"/approve/"+id}>Approve</Button.Transaction>,
       <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
       <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
@@ -147,6 +149,18 @@ app.frame('/page/:id', async (c) => {
   
 })
 
+app.transaction('/approve/:id', (c) => {
+  // Contract transaction response.
+  const { id } = c.req.param()
+  console.log(" in approve page, got ID " + id)
+
+   return c.contract({
+     abi: abiToken,
+     chainId: 'eip155:84532',
+     functionName: 'approve',
+     to: tokenAdress,
+   })
+})
 
 app.transaction('/donate/:id', (c) => {
   // Contract transaction response.
