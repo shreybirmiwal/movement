@@ -89,10 +89,8 @@ contract Movement is MovementStorage {
         return petitions[_id].donors.length;
     }
 
-    function getTotalSigners(
-        uint256 _id
-    ) public view returns (address[] memory) {
-        return petitions[_id].signers;
+    function getTotalSigners(uint256 _id) public view returns (uint256) {
+        return petitions[_id].signers.length;
     }
 
     function getPetitions() public view returns (Petition[] memory) {
