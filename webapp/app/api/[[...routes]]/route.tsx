@@ -80,16 +80,6 @@ app.frame('/', async (c) => {
   })
 })
 
-app.transaction('/Increment', (c) => {
-  // Contract transaction response.
-  return c.contract({
-    abi: abi2,
-    chainId: 'eip155:84532',
-    functionName: 'increment',
-    to: '0xBe6449Bfe2DC633A91431740Ee3D502aEdD374ED'
-  })
-})
-
 
 app.frame('/page/:id', async (c) => {
 
@@ -157,20 +147,30 @@ app.frame('/page/:id', async (c) => {
   
 })
 
+app.transaction('/Increment', (c) => {
+  // Contract transaction response.
+  return c.contract({
+    abi: abi2,
+    chainId: 'eip155:84532',
+    functionName: 'increment',
+    to: '0xBe6449Bfe2DC633A91431740Ee3D502aEdD374ED'
+  })
+})
+
+
 app.transaction('/donate/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
   console.log(" in donate page, got ID " + id)
   const { inputText } = c
   console.log(" in donate page, got inputText " + inputText)
-  const wei = BigInt(inputText || 0);
 
    return c.contract({
      abi,
      chainId: 'eip155:84532',
      functionName: 'donate',
      to: contractAdress,
-     args: [id, BigInt(wei)] // Convert inputText to BigInt
+     args: [Number(id), Number(inputText)] // Convert inputText to BigInt
    })
 
 })
@@ -183,7 +183,7 @@ app.transaction('/sign/:id', (c) => {
      chainId: 'eip155:84532',
      functionName: 'sign',
      to: contractAdress,
-     args: [id] 
+     args: [Number(id)] 
    })
 
 })
