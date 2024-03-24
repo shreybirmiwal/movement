@@ -130,10 +130,9 @@ app.frame('/page/:id', async (c) => {
           flexDirection: 'column',
           justifyContent: 'flex-end',
           alignItems: 'center',
-          paddingBottom: '135x',
         }}
       >
-        <div style={{ fontSize: 100, color:'black', display:'flex' }}>
+        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '20px' }}>
           {signers.toString()}
         </div>
       </div>
@@ -151,8 +150,6 @@ app.frame('/page/:id', async (c) => {
 })
 
 app.transaction('/approve/:id', (c) => {
-
-
   // Contract transaction response.
   const { id } = c.req.param()
   console.log(" in approve page, got ID " + id)
@@ -164,7 +161,7 @@ app.transaction('/approve/:id', (c) => {
      chainId: 'eip155:84532',
      functionName: 'approve',
      to: tokenAdress,
-      args: [contractAdress, Number(inputText)]
+      args: [contractAdress, Number(inputText)*10^18]
    })
 })
 
@@ -180,7 +177,7 @@ app.transaction('/donate/:id', (c) => {
      chainId: 'eip155:84532',
      functionName: 'donate',
      to: contractAdress,
-     args: [Number(id), Number(inputText)] // Convert inputText to BigInt
+     args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
    })
 
 })
