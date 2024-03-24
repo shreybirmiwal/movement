@@ -65,6 +65,22 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
     return { totalDonors, downloadURL, downloadPDF }
 }
 
+async function getDonationAddy(id: Number): Promise<{ DonationAddress2: string }> {
+
+  const [DonationAddress] = await Promise.all([
+    publicClient.readContract({
+      address: contractAdress,
+      abi: abi,
+      functionName: 'getDonationAddress',
+      args : [id]
+    })
+  ]);
+
+  return { DonationAddress2: DonationAddress as string };
+
+}
+
+
 
 app.frame('/', async (c) => {
   return c.res({
@@ -146,12 +162,21 @@ app.frame('/page/:id', async (c) => {
 })
 
 
-app.transaction('/donate/:id', (c) => {
+app.transaction('/donate/:id', async (c)  => {
 
   const { id } = c.req.param()
   console.log(" in donate page, got ID " + id)
   const { inputText } = c
   console.log(" in donate page, got inputText " + inputText)
+
+  const data = await getDonationAddy(Number(id));
+  console.log(" DONATION ADDY " + data.DonationAddress2)
+
+  return c.send({
+    chainId: 'eip155:84532',
+    to: `0x${data.DonationAddress2.substring(2)}`,
+    value: parseEther(inputText ?? '')
+  })
 
    return c.contract({
      abi,
