@@ -33,7 +33,7 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
     publicClient.readContract({
       address: contractAdress,
       abi: abi,
-      functionName: 'getTotalDonors',
+      functionName: 'getTotalSigners',
       args : [id]
     }),
     publicClient.readContract({
