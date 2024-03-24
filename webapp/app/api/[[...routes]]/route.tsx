@@ -12,7 +12,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/
 import { publicClient } from './client'
 import { formatEther } from 'viem'
 import { abiToken } from './abiToken'
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 const { address, isConnected } = useAccount();
 
