@@ -153,6 +153,7 @@ app.frame('/page/:id', async (c) => {
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
       <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
+      <Button.Transaction target={"/send-ether/"}>send ether</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
       <Button.Link href="https://frame-builder.vercel.app/">Start your Movement</Button.Link>,
     ],
@@ -164,12 +165,14 @@ app.frame('/page/:id', async (c) => {
 app.transaction('/donate/:id', async (c)  => {
 
   const { id } = c.req.param()
-  console.log(" in donate page, got ID " + id)
   const { inputText } = c
+  console.log(" in donate page, got ID " + id)
   console.log(" in donate page, got inputText " + inputText)
 
   const data = await getDonationAddy(Number(id));
-  console.log(" DONATION ADDY " + data.DonationAddress2)
+  var DONNYADDY = `0x${data.DonationAddress2.substring(2)}`
+
+  console.log(" DONATION ADDY " + DONNYADDY)
 
   return c.send({
     chainId: 'eip155:84532',
@@ -198,7 +201,7 @@ app.transaction('/send-ether', (c) => {
   // Send transaction response.
   return c.send({
     chainId: 'eip155:84532',
-    to: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
+    to: '0x1991EE670B08485FB7d33E209E26749f769C0D90',
     value: parseEther(inputText ?? '')
   })
 })
