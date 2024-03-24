@@ -12,7 +12,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/
 import { publicClient } from './client'
 import { formatEther } from 'viem'
 import { abiToken } from './abiToken'
-import { useAccount } from 'wagmi';
+import { getAccount } from 'wagmi/actions'
+
 
 const app = new Frog({
   assetsPath: '/',
@@ -51,6 +52,7 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
       functionName: 'getPDFURI',
       args : [id]
     }),
+
   ]);
 
     const url2: string = URL as string;
@@ -109,8 +111,8 @@ app.frame('/page/:id', async (c) => {
     }
 
   var signers = formatNumber(totalDonors);
-
   console.log(signers + " " + downloadURL)
+
 
 
   return c.res({
@@ -128,7 +130,7 @@ app.frame('/page/:id', async (c) => {
           flexDirection: 'column',
           justifyContent: 'flex-end',
           alignItems: 'center',
-          paddingBottom: '90px',
+          paddingBottom: '135x',
         }}
       >
         <div style={{ fontSize: 100, color:'black', display:'flex' }}>
@@ -142,7 +144,7 @@ app.frame('/page/:id', async (c) => {
       <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
       <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
-      <Button.Link href="http://localhost:3001/">Start your Movement</Button.Link>,
+      <Button.Link href="https://frame-builder.vercel.app/">Start your Movement</Button.Link>,
     ],
   })
   
@@ -150,7 +152,6 @@ app.frame('/page/:id', async (c) => {
 
 app.transaction('/approve/:id', (c) => {
 
-  const { address } = useAccount();
 
   // Contract transaction response.
   const { id } = c.req.param()
@@ -163,7 +164,7 @@ app.transaction('/approve/:id', (c) => {
      chainId: 'eip155:84532',
      functionName: 'approve',
      to: tokenAdress,
-      args: [address, Number(inputText)]
+      args: [contractAdress, Number(inputText)]
    })
 })
 
