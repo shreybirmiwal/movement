@@ -68,7 +68,7 @@ function App() {
         console.log("ID:", id);
         confirmAlert({
           title: 'Your Movement has been created!',
-          message: ('http://localhost:3000/'+ id.toString()),
+          message: ('https://movement-iota.vercel.app/api/page/'+ id.toString()),
           buttons: [
             {
               label: 'Yes',
