@@ -9,11 +9,12 @@ import { handle } from 'frog/next'
 import { serveStatic } from 'frog/serve-static'
 import {storage} from '../../firebase'
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
-
 import { publicClient } from './client'
 import { formatEther } from 'viem'
-
 import { abiToken } from './abiToken'
+import { useAccount, useNetwork } from 'wagmi';
+
+const { address, isConnected } = useAccount();
 
 const app = new Frog({
   assetsPath: '/',
@@ -153,12 +154,15 @@ app.transaction('/approve/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
   console.log(" in approve page, got ID " + id)
+  const { inputText } = c
+  console.log(" in approve page, got inputText " + inputText)
 
    return c.contract({
      abi: abiToken,
      chainId: 'eip155:84532',
      functionName: 'approve',
      to: tokenAdress,
+      args: [address, Number(inputText)]
    })
 })
 
