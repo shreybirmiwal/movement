@@ -16,7 +16,6 @@ import { formatEther } from 'viem'
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  origin: 'https://bde5-198-217-29-1.ngrok-free.app',
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
