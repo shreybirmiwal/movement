@@ -9,20 +9,21 @@ import { handle } from 'frog/next'
 import { serveStatic } from 'frog/serve-static'
 import {storage} from '../../firebase'
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
-
 import { publicClient } from './client'
 import { formatEther } from 'viem'
+import { abiToken } from './abiToken'
+import { getAccount } from 'wagmi/actions'
+
 
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  origin: 'https://bde5-198-217-29-1.ngrok-free.app',
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
 
 const contractAdress = '0xd4CA80397bdA2Aa6fF6084E789A4b6D57eD46E2c'
-
+const tokenAdress = '0x1f51E32d78894C0264181F2908f9459Fc7563555'
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
@@ -51,6 +52,7 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
       functionName: 'getPDFURI',
       args : [id]
     }),
+
   ]);
 
     const url2: string = URL as string;
@@ -80,6 +82,7 @@ app.frame('/', async (c) => {
   })
 })
 
+
 app.frame('/page/:id', async (c) => {
 
   const { id } = c.req.param()
@@ -108,8 +111,8 @@ app.frame('/page/:id', async (c) => {
     }
 
   var signers = formatNumber(totalDonors);
-
   console.log(signers + " " + downloadURL)
+
 
 
   return c.res({
@@ -127,43 +130,58 @@ app.frame('/page/:id', async (c) => {
           flexDirection: 'column',
           justifyContent: 'flex-end',
           alignItems: 'center',
-          paddingBottom: '90px',
         }}
       >
-        <div style={{ fontSize: 100, color:'black', display:'flex' }}>
+        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '20px' }}>
           {signers.toString()}
         </div>
       </div>
     ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
-      <Button.Transaction target={"/Donate/"+id}>Donate</Button.Transaction>,
-      <Button.Transaction target={"/Sign/"+id}>Sign</Button.Transaction>,
+      <Button.Transaction target={"/approve/"+id}>Approve</Button.Transaction>,
+      <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
+      <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
-      <Button.Link href="http://localhost:3001/">Start your Movement</Button.Link>,
+      <Button.Link href="https://frame-builder.vercel.app/">Start your Movement</Button.Link>,
     ],
   })
   
 })
 
-app.transaction('/Donate/:id', (c) => {
+app.transaction('/approve/:id', (c) => {
+  // Contract transaction response.
+  const { id } = c.req.param()
+  console.log(" in approve page, got ID " + id)
+  const { inputText } = c
+  console.log(" in approve page, got inputText " + inputText)
+
+   return c.contract({
+     abi: abiToken,
+     chainId: 'eip155:84532',
+     functionName: 'approve',
+     to: tokenAdress,
+      args: [contractAdress, Number(inputText)*10^18]
+   })
+})
+
+app.transaction('/donate/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
   console.log(" in donate page, got ID " + id)
   const { inputText } = c
   console.log(" in donate page, got inputText " + inputText)
-  const wei = BigInt(inputText || 0);
 
    return c.contract({
      abi,
      chainId: 'eip155:84532',
      functionName: 'donate',
      to: contractAdress,
-     args: [id, BigInt(wei)] // Convert inputText to BigInt
+     args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
    })
 
 })
-app.transaction('/Sign/:id', (c) => {
+app.transaction('/sign/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
   console.log(" in sign page, got ID " + id)
@@ -172,7 +190,7 @@ app.transaction('/Sign/:id', (c) => {
      chainId: 'eip155:84532',
      functionName: 'sign',
      to: contractAdress,
-     args: [id] 
+     args: [Number(id)] 
    })
 
 })

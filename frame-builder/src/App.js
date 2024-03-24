@@ -112,7 +112,8 @@ function App() {
       console.log('Download URL:', downloadURL);
 
       //also uploda the pdf
-      const fileRef2 = ref(storage, (id+1).toString()+'.pdf'); 
+      console.log("THIS IS !!! " + selectedPDF.name);
+      const fileRef2 = ref(storage, selectedPDF.name); 
       await uploadBytes(fileRef2, selectedPDF[0]);
       pdfUrl = await getDownloadURL(fileRef2);
 
@@ -292,7 +293,7 @@ function App() {
               <div className='text-center p-3'>
                 <h1 className="text-3xl font-bold mt-10">{movementTitle || '[Title goes here]'}</h1>
                 <h1 className="text-2xl mt-4">{movementDescription || '[Description goes here]'}</h1>
-                <h1 className='mt-24'> People have joined this movement </h1>
+                <h1 className='mt-32'> People have joined this movement </h1>
               </div>
             </div>
             <div className='bg-gray-100 h-[122px]'>
