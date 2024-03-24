@@ -139,18 +139,18 @@ function App() {
     console.log('Background Color:', backgroundColor);
     console.log('Donation Address:', donationAddress);
 
-    if(!isConnected){
-      toast.error('Ensure wallet is connected!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
+    // if(!isConnected){
+    //   toast.error('Ensure wallet is connected!', {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "dark",
+    //   });
+    // }
 
     if (!(movementTitle && movementDescription && selectedPDF)) {
       toast.error('Ensure fields not left blank!', {
