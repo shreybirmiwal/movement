@@ -162,10 +162,10 @@ app.transaction('/donate/:id', (c) => {
   //    args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
   //  })
 
-   return c.send({
+  return c.send({
     chainId: 'eip155:84532',
     to: contractAdress,
-    value: parseEther(inputText),
+    value: parseEther(String(inputText || '0')),
   })
 
 })
