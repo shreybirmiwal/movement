@@ -137,8 +137,8 @@ app.frame('/page/:id', async (c) => {
     ),
     intents: [
       <TextInput placeholder="Donate ETH" />,
-      <Button.Transaction target={"/Donate/"+id}>Donate</Button.Transaction>,
-      <Button.Transaction target={"/Sign/"+id}>Sign</Button.Transaction>,
+      <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
+      <Button.Transaction target={"/sign/"+id}>Sign</Button.Transaction>,
       <Button.Link href={pdfURL}>View</Button.Link>,
       <Button.Link href="http://localhost:3001/">Start your Movement</Button.Link>,
     ],
@@ -146,7 +146,7 @@ app.frame('/page/:id', async (c) => {
   
 })
 
-app.transaction('/Donate/:id', (c) => {
+app.transaction('/donate/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
   console.log(" in donate page, got ID " + id)
@@ -163,7 +163,7 @@ app.transaction('/Donate/:id', (c) => {
    })
 
 })
-app.transaction('/Sign/:id', (c) => {
+app.transaction('/sign/:id', (c) => {
   // Contract transaction response.
   const { id } = c.req.param()
   console.log(" in sign page, got ID " + id)
