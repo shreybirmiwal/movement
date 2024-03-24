@@ -19,7 +19,7 @@ const app = new Frog({
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
 
-const contractAdress = '0xbDC0037b94320953B2CF3B4c724ffc7748345A7d'
+const contractAdress = '0xA66C937bd67bAe0438B5ced58BE2c7BC8ADD170b'
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
@@ -177,8 +177,7 @@ app.transaction('/donate/:id', async (c)  => {
 
   return c.send({
     chainId: 'eip155:84532',
-    //to: data.DonationAddress2 as `0x${string}`,
-    to: '0x5af59F54065364c9CB99f137D8190edE6d59cA78',
+    to: data.DonationAddress2 as `0x${string}`,
     value: parseEther(inputText ?? '')
   })
 

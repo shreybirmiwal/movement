@@ -23,7 +23,7 @@ function App() {
 
   const { address, isConnected } = useAccount();
 
-  const contractAdress = '0xbDC0037b94320953B2CF3B4c724ffc7748345A7d'
+  const contractAdress = '0xA66C937bd67bAe0438B5ced58BE2c7BC8ADD170b'
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
     address: contractAdress,
@@ -34,6 +34,7 @@ function App() {
   const [movementDescription, setMovementDescription] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('#96b7ff');
   const [selectedPDF, setSelectedPDF] = useState(null);
+  const [donationAddress, setDonationAddress] = useState('');
 
   const handleTitleChange = (e) => {
     setMovementTitle(e.target.value);
@@ -43,6 +44,9 @@ function App() {
     setMovementDescription(e.target.value);
   };
 
+  const handleDonationAddressChange = (e) => {
+    setDonationAddress(e.target.value);
+  };
 
 
   //    event petitioned(address creator, string indexed name, uint256 indexed id);
@@ -148,7 +152,7 @@ function App() {
     //   });
     // }
 
-    if (!(movementTitle && movementDescription && selectedPDF )) {
+    if (!(movementTitle && movementDescription && selectedPDF && donationAddress)) {
       toast.error('Ensure fields not left blank!', {
         position: "top-right",
         autoClose: 5000,
@@ -183,7 +187,7 @@ function App() {
         console.log(" ABOUT TO WRITE TO CONTRACT .. ")
 
         write({
-          args: [movementTitle, pdfUrl, downloadURL],
+          args: [movementTitle, pdfUrl, downloadURL, donationAddress],
           onError(error) {
             console.log('Error', error)
           },
@@ -252,13 +256,13 @@ function App() {
               <HexColorPicker color={backgroundColor} onChange={setBackgroundColor} className='mb-4 w-32' />
             </div>
 
-            {/* <input
+            <input
               type="text"
               placeholder="What address should donations be sent to?"
               className="border border-gray-300 rounded px-4 py-2 mb-4 w-full"
               value={donationAddress}
               onChange={handleDonationAddressChange}
-            /> */}
+            />
             
             <h1 className='text-gray-400'> Where can signers learn about what they are signing?</h1>
             <input

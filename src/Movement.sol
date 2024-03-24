@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity ^0.8.2;
 
 contract MovementStorage {
     struct Petition {
@@ -11,6 +11,7 @@ contract MovementStorage {
         uint256 funds;
         address[] donors;
         address[] signers;
+        string donation_address;
     }
 
     Petition[] public petitions;
@@ -22,7 +23,8 @@ contract Movement is MovementStorage {
     function create(
         string memory _name,
         string memory _pdfURI,
-        string memory _imageURI
+        string memory _imageURI,
+        string memory _donation_address
     ) public {
         address[] memory _donors;
         address[] memory _signers;
@@ -35,7 +37,8 @@ contract Movement is MovementStorage {
                 _imageURI,
                 0,
                 _donors,
-                _signers
+                _signers,
+                _donation_address
             )
         );
         emit petitioned(msg.sender, _name, petitions.length - 1);
@@ -62,8 +65,8 @@ contract Movement is MovementStorage {
         return petitions[_id].imageURI;
     }
 
-    function getDonationAddress(uint _id) public view returns (address) {
-        return petitions[_id].creator;
+    function getDonationAddress(uint _id) public view returns (string memory) {
+        return petitions[_id].donation_address;
     }
 
     function getPDFURI(uint _id) public view returns (string memory) {
