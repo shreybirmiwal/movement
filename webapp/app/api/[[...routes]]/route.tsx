@@ -19,7 +19,7 @@ const app = new Frog({
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
 })
 
-const contractAdress = '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B'
+const contractAdress = '0xf1cAb9E24b897ed56DDCE7ED042484A45548c4f8'
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
@@ -64,6 +64,22 @@ async function getData(id: Number): Promise<{ totalDonors: any; downloadURL: str
 
     return { totalDonors, downloadURL, downloadPDF }
 }
+
+async function getDonationAddy(id: Number): Promise<{ DonationAddress2: string }> {
+
+  const [DonationAddress] = await Promise.all([
+    publicClient.readContract({
+      address: contractAdress,
+      abi: abi,
+      functionName: 'getDonationAddress',
+      args : [id]
+    })
+  ]);
+
+  return { DonationAddress2: DonationAddress as string };
+
+}
+
 
 
 app.frame('/', async (c) => {
@@ -146,28 +162,35 @@ app.frame('/page/:id', async (c) => {
 })
 
 
-app.transaction('/donate', (c) => {
-  // Contract transaction response.
-  // const { id } = c.req.param()
-  // console.log(" in donate page, got ID " + id)
+app.transaction('/donate/:id', async (c)  => {
+
+  const { id } = c.req.param()
+  console.log(" in donate page, got ID " + id)
   const { inputText } = c
-  // console.log(" in donate page, got inputText " + inputText)
+  console.log(" in donate page, got inputText " + inputText)
 
-  // console.log( "calling DONATE WITH " + Number(id) + " " + (Number(inputText)*10^18));
+  const data = await getDonationAddy(Number(id));
+  console.log(" DONATION ADDY " + data.DonationAddress2)
 
-  //  return c.contract({
-  //    abi,
-  //    chainId: 'eip155:84532',
-  //    functionName: 'donate',
-  //    to: contractAdress,
-  //    args: [Number(id), Number(inputText)*10^18] // Convert inputText to BigInt
-  //  })
-  
   return c.send({
     chainId: 'eip155:84532',
-    to: '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B',
+    to: `0x${data.DonationAddress2.substring(2)}`,
     value: parseEther(inputText ?? '')
   })
+
+   return c.contract({
+     abi,
+     chainId: 'eip155:84532',
+     functionName: 'donate',
+     to: contractAdress,
+     args: [Number(id)] // Convert inputText to BigInt
+   })
+  
+  // return c.send({
+  //   chainId: 'eip155:84532',
+  //   to: '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B',
+  //   value: parseEther(inputText ?? '')
+  // })
 
 })
 

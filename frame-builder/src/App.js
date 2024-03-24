@@ -23,7 +23,7 @@ function App() {
 
   const { address, isConnected } = useAccount();
 
-  const contractAdress = '0x9A0E9b21A73a9F6329f7Ebb07cc019947A84112B'
+  const contractAdress = '0xf1cAb9E24b897ed56DDCE7ED042484A45548c4f8'
 
   const { data, isLoading, isSuccess, write } = useContractWrite({
     address: contractAdress,
@@ -68,7 +68,7 @@ function App() {
         console.log("ID:", id);
         confirmAlert({
           title: 'Your Movement has been created!',
-          message: ('http://localhost:3000/'+ id.toString()),
+          message: ('https://movement-iota.vercel.app/api/page/'+ id.toString()),
           buttons: [
             {
               label: 'Yes',
@@ -152,7 +152,7 @@ function App() {
     //   });
     // }
 
-    if (!(movementTitle && movementDescription && selectedPDF)) {
+    if (!(movementTitle && movementDescription && selectedPDF && donationAddress)) {
       toast.error('Ensure fields not left blank!', {
         position: "top-right",
         autoClose: 5000,
@@ -187,7 +187,7 @@ function App() {
         console.log(" ABOUT TO WRITE TO CONTRACT .. ")
 
         write({
-          args: [movementTitle, pdfUrl, downloadURL],
+          args: [movementTitle, pdfUrl, downloadURL, donationAddress],
           onError(error) {
             console.log('Error', error)
           },
@@ -271,6 +271,14 @@ function App() {
               accept=".pdf"
               onChange={handlePDFUpload}
               placeholder='Upload Contract PDF'
+            />
+
+            <input
+              type="text"
+              placeholder="Where should donations be sent?"
+              className="border border-gray-300 rounded px-4 py-2 mb-4 w-full"
+              value={donationAddress}
+              onChange={handleDonationAddressChange}
             />
 
             <button
