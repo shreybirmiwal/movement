@@ -129,26 +129,7 @@ app.frame('/page/:id', async (c) => {
 
   return c.res({
     action: '/finish',
-    image: (
-      <div
-        style={{
-          backgroundImage: `url(${downloadURL})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat', // Prevent background image from repeating
-          width: '1200px',
-          height: '630px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      >
-        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '175px' }}>
-          {signers.toString()}
-        </div>
-      </div>
-    ),
+    image: 'yay.png',
     intents: [
       <TextInput placeholder="Donate ETH" />,
       <Button.Transaction target={"/donate/"+id}>Donate</Button.Transaction>,
