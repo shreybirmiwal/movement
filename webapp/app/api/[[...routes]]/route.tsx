@@ -128,7 +128,7 @@ app.frame('/page/:id', async (c) => {
           alignItems: 'center',
         }}
       >
-        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '20px' }}>
+        <div style={{ fontSize: 100, color:'black', display:'flex', paddingBottom: '120px' }}>
           {signers.toString()}
         </div>
       </div>
