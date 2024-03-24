@@ -177,8 +177,9 @@ app.transaction('/donate/:id', async (c)  => {
 
   return c.send({
     chainId: 'eip155:84532',
-    to: data.DonationAddress2 as `0x${string}`,
-    value: BigInt(100000),
+    //to: data.DonationAddress2 as `0x${string}`,
+    to: '0x5af59F54065364c9CB99f137D8190edE6d59cA78',
+    value: parseEther(inputText ?? '')
   })
 
   //  return c.contract({
