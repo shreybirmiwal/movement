@@ -3,19 +3,16 @@ pragma solidity 0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
 import {Movement} from "../src/Movement.sol";
-import {TestERC20} from "../src/TestERC20.sol";
 
 contract MovementTest is Test {
     constructor() {}
 
     Movement movement;
-    TestERC20 erc20;
     address sree = 0x8B603f2890694cF31689dFDA28Ff5e79917243e9;
 
     function setUp() public {
-        erc20 = new TestERC20(address(this));
-        movement = new Movement(address(erc20));
-        erc20.mint(sree, 1000);
+        movement = new Movement();
+        vm.deal(address(sree), 1000 ether);
     }
 
     function testCreate() public {
@@ -43,12 +40,10 @@ contract MovementTest is Test {
     function testDonate() public {
         testCreate();
         vm.startPrank(sree);
-        assert(erc20.balanceOf(sree) == 1000);
-        erc20.approve(address(movement), 100);
-        movement.donate(0, 100);
+        movement.donate{value: 1 * 10 ** 18}(0, 1 * 10 ** 18);
         vm.stopPrank();
         Movement.Petition[] memory petitions = movement.getPetitions();
-        assert(petitions[0].funds == 100);
+        assert(petitions[0].funds == 1 ether);
         assert(petitions[0].donors.length == 1);
     }
 
@@ -56,6 +51,6 @@ contract MovementTest is Test {
         testDonate();
         movement.withdraw(0);
         Movement.Petition[] memory petitions = movement.getPetitions();
-        assert(petitions[0].funds == 0);
+        assert(petitions[0].funds == 0 ether);
     }
 }
