@@ -153,14 +153,12 @@ app.transaction('/donate/:id', (c) => {
   const { inputText } = c
   console.log(" in donate page, got inputText " + inputText)
 
-  console.log( "calling DONATE WITH " + Number(id) + " " + (Number(inputText)*10^18));
-
    return c.contract({
      abi,
      chainId: 'eip155:84532',
      functionName: 'donate',
      to: contractAdress,
-     args: [Number(id), parseEther(inputText ?? '0')] // Convert inputText to BigInt
+     args: [Number(id)] // Convert inputText to BigInt
    })
   
   // return c.send({
